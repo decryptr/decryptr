@@ -12,8 +12,19 @@ predict.tjrs <- function(object, preprocess = preprocess_tjrs, ...) {
     paste(collapse = '')
 }
 
-predict.captcha <- function(model, object, preprocess = function(x, y) x, ...) {
-  newdata <- preprocess(model, object)
-  predict(m, newdata = newdata) %>%
-    paste(collapse = '')
+predict <- function(object, ...) {
+  UseMethod('predict')
+}
+
+predict.captcha <- function(model, object, ...) {
+  predict(model, newdata = prepare(object))
+}
+
+break_captcha.tjrs <- function(arq, model = NULL) {
+  a <- read_tjrs(arq)
+  if (is.null(modelo)) {
+    model <- decryptr.models::tjrs
+  }
+  X <- prepare(arq)
+  predict(model, newdata = X)
 }

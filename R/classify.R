@@ -24,6 +24,7 @@ classify.captcha <- function(x, dest, answer = NULL, ...) {
   ext <- tools::file_ext(x)
   out <- sprintf('%s/%s_%s.%s', dest, nm, answer, ext)
   file.copy(x, out)
-  class(out) <- c("captcha", "captcha_image", "tjrs")
+  # adicionar mensagem
+  # class(out) <- c("captcha", "captcha_image", "tjrs")
   invisible(out)
 }

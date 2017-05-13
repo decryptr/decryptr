@@ -2,16 +2,20 @@ prepare <- function(arqs) {
   UseMethod('prepare')
 }
 
-prepare.image_captcha <- function(arqs) {
-  words <- arqs %>%
-    basename() %>%
-    tools::file_path_sans_ext() %>%
-    stringr::str_match('_([a-zA-Z0-9]+)$') %>%
-    magrittr::extract(TRUE, 2)
-  all_letters <- unique(sort(unlist(strsplit(words, ''))))
-  y <- plyr::laply(words, create_response, all_letters)
+prepare.image_captcha <- function(arqs, only_x = FALSE) {
+  if (!only_x && length(arqs) > 1) {
+    words <- arqs %>%
+      basename() %>%
+      tools::file_path_sans_ext() %>%
+      stringr::str_match('_([a-zA-Z0-9]+)$') %>%
+      magrittr::extract(TRUE, 2)
+    all_letters <- unique(sort(unlist(strsplit(words, ''))))
+    y <- plyr::laply(words, create_response, all_letters)
+    return(list(y = y, x = x))
+  }
   x <- plyr::laply(arqs, jpeg::readJPEG)
-  list(y = y, x = x)
+  if (length(arqs) == 1) dim(x) <- c(1, dim(x))
+  return(list(y = NULL, x = x))
 }
 
 create_response <- function(x, all_letters) {
