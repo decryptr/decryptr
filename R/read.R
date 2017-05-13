@@ -1,13 +1,3 @@
-#' Read captcha
-#'
-#' @param path path
-#' @param ... other
-#'
-#' @export
-read_captcha <- function(path, ...) {
-  UseMethod("read_captcha")
-}
-
 #' Read captcha image
 #'
 #' @param path path
@@ -23,5 +13,6 @@ read_captcha <- function(path, ...) {
     return(path)
   }
   # Error
-  stop("All files must have extensions 'jpge', 'jpg' or 'png'.")
+  stop("All files must have extensions 'jpeg', 'jpg' or 'png'.")
 }
+
