@@ -4,10 +4,12 @@
 \alias{predict.tjrs}
 \title{Predizer os numeros do arquivo}
 \usage{
-\method{predict}{tjrs}(object, ...)
+\method{predict}{tjrs}(object, preprocess = preprocess_tjrs, ...)
 }
 \arguments{
 \item{object}{object}
+
+\item{preprocess}{preprocess function}
 
 \item{...}{other}
 }

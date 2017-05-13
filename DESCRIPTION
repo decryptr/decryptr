@@ -26,5 +26,8 @@ Imports:
   tibble,
   tidyr,
   grDevices,
-  graphics
+  graphics,
+    readr,
+    plyr,
+    tuneR
 RoxygenNote: 6.0.1

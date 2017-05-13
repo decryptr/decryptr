@@ -1,4 +1,3 @@
-
 #' Classify captcha
 #'
 #' @param x object
@@ -17,12 +16,14 @@ classify <- function(x, ...) {
 #' @param ... other
 #'
 #' @export
-classify.image_captcha <- function(x, dest, answer = NULL, ...) {
+classify.captcha <- function(x, dest, answer = NULL, ...) {
   suppressWarnings(dir.create(dest))
   if(is.null(answer)) { graphics::plot(x) }
   if(is.null(answer)) { answer <- readline(prompt="Answer: ") }
-  out <- sprintf('%s/%s_%s.jpeg', dest, tools::file_path_sans_ext(basename(x)), answer)
+  nm <- tools::file_path_sans_ext(basename(x))
+  ext <- tools::file_ext(x)
+  out <- sprintf('%s/%s_%s.%s', dest, nm, answer, ext)
   file.copy(x, out)
-  class(out) <- c("image_captcha", "tjrs")
+  class(out) <- c("captcha", "captcha_image", "tjrs")
   invisible(out)
 }

@@ -16,6 +16,6 @@ download_tjrs <- function(dest = NULL) {
   # Send get request
   httr::GET(url, httr::write_disk(dest, overwrite = TRUE))
   # Return destination with appropriate classes
-  class(dest) <- c("image_captcha", "tjrs")
+  class(dest) <- c("captcha", "image_captcha", "tjrs")
   return(dest)
 }

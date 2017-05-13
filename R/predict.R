@@ -8,6 +8,12 @@
 predict.tjrs <- function(object, preprocess = preprocess_tjrs, ...) {
   m <- captchaTJRS:::m
   newdata <- preprocess_tjrs(object, nm = names(m$trainingData))
-  caret::predict.train(m, newdata = newdata) %>%
+  predict(m, newdata = newdata) %>%
+    paste(collapse = '')
+}
+
+predict.captcha <- function(model, object, preprocess = function(x, y) x, ...) {
+  newdata <- preprocess(model, object)
+  predict(m, newdata = newdata) %>%
     paste(collapse = '')
 }
