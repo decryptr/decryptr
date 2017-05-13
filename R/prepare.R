@@ -1,8 +1,22 @@
-prepare <- function(arqs) {
+#' Predict captcha
+#'
+#' @param arqs object
+#' @param ... other
+#'
+#' @export
+prepare <- function(arqs, ...) {
   UseMethod('prepare')
 }
 
-prepare.image_captcha <- function(arqs, only_x = FALSE) {
+#' Prepare captchas
+#'
+#' Prepare answare and features for modeling. Expect '_' as the answer separator.
+#'
+#'@param arqs arqs read
+#'@param only_x boolean. Is the answers present on file names?
+#'
+#'@export
+prepare.captcha <- function(arqs, only_x = FALSE) {
   if (!only_x && length(arqs) > 1) {
     words <- arqs %>%
       basename() %>%
@@ -13,7 +27,7 @@ prepare.image_captcha <- function(arqs, only_x = FALSE) {
     y <- plyr::laply(words, create_response, all_letters)
     return(list(y = y, x = x))
   }
-  x <- plyr::laply(arqs, jpeg::readJPEG)
+  x <- plyr::laply(arqs, load_image)
   if (length(arqs) == 1) dim(x) <- c(1, dim(x))
   return(list(y = NULL, x = x))
 }

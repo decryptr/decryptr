@@ -1,3 +1,20 @@
+#' Read PNG or JPG
+#'
+#' @param x object
+#' @param ... other
+#'
+#' @export
+load_image <- function(x, ...) {
+  # Get extention
+  ext <- tolower(tools::file_ext(basename(x)))
+  if (ext %in% c("jpeg", "jpg")) {
+    img <- jpeg::readJPEG(x)
+  } else if (ext == "png") {
+    img <- png::readPNG(x)
+  }
+  return(img)
+}
+
 #' Plot captcha
 #'
 #' @param x object
@@ -6,14 +23,7 @@
 #'
 #' @export
 plot.captcha <- function(x, y, ...) {
-  # Get extention
-  ext <- tolower(tools::file_ext(basename(x)))
-  if (ext %in% c("jpeg", "jpg")) {
-    graphics::plot(grDevices::as.raster(jpeg::readJPEG(x)))
-  } else if (ext == "png") {
-    graphics::plot(grDevices::as.raster(png::readPNG(x)))
-  } else {
-    stop("Wrong extension. File must be one of c('jpeg', 'jpg', 'png')")
-  }
+  img <- load_image(x)
+  graphics::plot(grDevices::as.raster(img))
 }
 
