@@ -3,9 +3,9 @@ Title: An extensible API for breaking captchas
 Version: 0.0.0.9000
 Authors@R: c(person("Julio", "Trecenti", email = "j@jtrecenti.com", role = c("aut", "cre")),
   person("Caio", "Lente", email = "ctlente@gmail.com", role = c("aut")),
-  person("Milene", "Farhat", email = "", role = c("aut")),
-  person("Beatriz", "Vianna", email = "", role = c("aut")),
-  person("Evelin", "", email = "", role = c("aut")))
+  person("Milene", "Farhat", email = "milene.farhat@gmail.com", role = c("aut")),
+  person("Beatriz", "Vianna", email = "evelinangelica@gmail.com", role = c("aut")),
+  person("Evelin", "", email = "bia.vianna@gmail.com", role = c("aut")))
 Description: This tool helps you download, visualize and break captchas.
   It is built as an extensible API so anyone can contribute with their
   own captcha-breaking code.
