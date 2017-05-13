@@ -1,15 +1,21 @@
 
-read <- function(path, ...) {
-  UseMethod("read")
-}
-
-read.default <- function(path, ...) {
-  stop("Undefined type")
-}
-
-#' Read TRJS
+#' Read TJRS
+#'
+#' @param path path
 #'
 #' @export
-read.captcha_tjrs <- function(x, ...) {
-  magick::image_read()
+read_tjrs <- function(path) {
+
+  # Get extention
+  ext <- tolower(tools::file_ext(basename(path)))
+
+  # Return path
+  if (ext %in% c("jpeg", "jpg")) {
+    message("File was located and will be brought to memory when used")
+    class(path) <- c("image_captcha", "tjrs")
+    return(path)
+  }
+
+  # Error
+  stop("File isn't of type TJRS")
 }
