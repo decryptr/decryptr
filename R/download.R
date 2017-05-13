@@ -11,6 +11,6 @@ download_tjrs <- function(path = NULL) {
   }
   httr::GET(url, httr::write_disk(path, overwrite = TRUE))
 
-  class(path) <- "tjrs"
+  class(path) <- "tjrs_download"
   return(path)
 }
