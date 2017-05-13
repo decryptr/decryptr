@@ -1,5 +1,5 @@
 
-print.tjrs_download <- function(x, ...) {
+print.captcha_tjrs <- function(x, ...) {
   print(as.character(x), ...)
 }
 

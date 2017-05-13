@@ -1,6 +1,6 @@
 
-plot.trjs_tibble <- function(x, ...) {
-  x <- as_tibble(x)
+plot.captcha_tjrs <- function(path, ...) {
+  read(x)
   x <- dplyr::mutate(x, cor = rgb(r, g, b), id = 1:n())
   p <- ggplot2::ggplot(x, ggplot2::aes(x = x, y = y))
   p <- p +
