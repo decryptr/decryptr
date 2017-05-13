@@ -5,7 +5,7 @@
 #' @param ... other
 #'
 #' @export
-plot.image_captcha <- function(x, y, ...) {
+plot.captcha <- function(x, y, ...) {
   # Get extention
   ext <- tolower(tools::file_ext(basename(x)))
   if (ext %in% c("jpeg", "jpg")) {
@@ -13,23 +13,7 @@ plot.image_captcha <- function(x, y, ...) {
   } else if (ext == "png") {
     graphics::plot(grDevices::as.raster(png::readPNG(x)))
   } else {
-    stop("Wrong extension")
+    stop("Wrong extension. File must be one of c('jpeg', 'jpg', 'png')")
   }
 }
 
-#' Plot captcha
-#'
-#' @param x object
-#' @param y -
-#' @param ... other
-#'
-#' @export
-plot.audio_captcha <- function(x, y, ...) {
-  # Get extention
-  ext <- tolower(tools::file_ext(basename(x)))
-  if (ext %in% c("wav")) {
-    graphics::plot(tuneR::readWave(x))
-  } else {
-    stop("Wrong extention")
-  }
-}

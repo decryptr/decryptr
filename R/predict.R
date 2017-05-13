@@ -1,3 +1,13 @@
+#' Predict captcha
+#'
+#' @param object object
+#' @param ... other
+#'
+#' @export
+predict <- function(object, ...) {
+  UseMethod('predict')
+}
+
 #' Predizer os numeros do arquivo
 #'
 #' @param object object
@@ -10,10 +20,6 @@ predict.tjrs <- function(object, preprocess = preprocess_tjrs, ...) {
   newdata <- preprocess_tjrs(object, nm = names(m$trainingData))
   predict(m, newdata = newdata) %>%
     paste(collapse = '')
-}
-
-predict <- function(object, ...) {
-  UseMethod('predict')
 }
 
 predict.captcha <- function(model, object, ...) {
