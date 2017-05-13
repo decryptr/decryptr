@@ -1,20 +1,13 @@
-
 #' Predizer os numeros do arquivo
 #'
 #' @param object object
+#' @param preprocess preprocess function
 #' @param ... other
 #'
 #' @export
-predict.tjrs <- function(object, ...) {
+predict.tjrs <- function(object, preprocess = preprocess_tjrs, ...) {
   m <- captchaTJRS:::m
-  object %>%
-    arrumar(names(m$trainingData)) %>% {
-      caret::predict.train(m, newdata = ., type = 'prob') %>%
-        tibble::rownames_to_column() %>%
-        tidyr::gather(key, value, -rowname) %>%
-        dplyr::group_by(rowname) %>%
-        dplyr::summarise(v = key[which.max(value)]) %>%
-        with(v)
-    } %>%
+  newdata <- preprocess_tjrs(object, nm = names(m$trainingData))
+  caret::predict.train(m, newdata = newdata) %>%
     paste(collapse = '')
 }
