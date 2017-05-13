@@ -1,3 +1,7 @@
+globalVariables(c("arq", "n", ".", "g", "r", "b", "y", "x", "group", "letras",
+                  "letras", "rowname", "v", "letra", "xy", "cor", "key", "value"))
+
+
 #' Pipe operator
 #'
 #' See \code{\link[magrittr]{\%>\%}} for more details.
