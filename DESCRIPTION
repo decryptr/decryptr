@@ -1,0 +1,16 @@
+Package: Decryptr
+Title: An extensible API for breaking captchas
+Version: 0.0.0.9000
+Authors@R: c(person("Julio", "Trecenti", email = "j@jtrecenti.com", role = c("aut", "cre")),
+  person("Caio", "Lente", email = "ctlente@gmail.com", role = c("aut")),
+  person("Milene", "Farhat", email = "", role = c("aut")),
+  person("Beatriz", "Vianna", email = "", role = c("aut")),
+  person("Evelin", "", email = "", role = c("aut")))
+Description: This tool helps you download, visualize and break captchas.
+  It is built as an extensible API so anyone can contribute with their
+  own captcha-breaking code.
+Depends: R (>= 3.3.3)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
