@@ -1,4 +1,4 @@
-Package: Decryptr
+Package: decryptr
 Title: An extensible API for breaking captchas
 Version: 0.0.0.9000
 Authors@R: c(person("Julio", "Trecenti", email = "j@jtrecenti.com", role = c("aut", "cre")),
@@ -15,8 +15,6 @@ Encoding: UTF-8
 LazyData: true
 Imports:
   magrittr,
-  captchaTJRS,
-  caret,
   dplyr,
   httr,
   jpeg,
@@ -27,7 +25,6 @@ Imports:
   tidyr,
   grDevices,
   graphics,
-    readr,
-    plyr,
-    tuneR
+  readr,
+  plyr
 RoxygenNote: 6.0.1
