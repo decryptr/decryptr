@@ -3,7 +3,7 @@
 #' @param path path
 #'
 #' @export
-read_captcha <- function(path, ...) {
+read_captcha <- function(path) {
   # Get extention
   ext <- tolower(tools::file_ext(basename(path)))
   # Return path

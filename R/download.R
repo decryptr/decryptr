@@ -1,10 +1,13 @@
-#' Download captcha from TJRS
+#' Download captcha from any site
 #'
+#' Generic download function
+#'
+#' @param url url to download
 #' @param dest destination
+#' @param secure use ssl verifypeer as FALSE
 #'
 #' @export
-
-download <- function(url, dest = NULL, secure = TRUE) {
+download <- function(url, dest = NULL, secure = FALSE) {
   # Build URL for request
   # If dest is null, create temporary file
   if (is.null(dest)) {
@@ -13,7 +16,6 @@ download <- function(url, dest = NULL, secure = TRUE) {
     dest <- tempfile(pattern = 'captcha', tmpdir = dest, fileext = '.jpeg')
   }
   # Send get request
-
   httr::GET(url, httr::write_disk(dest, overwrite = TRUE),
             httr::config(ssl_verifypeer = secure))
   read_captcha(dest)

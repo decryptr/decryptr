@@ -1,10 +1,10 @@
 #' Predict captcha
 #'
 #' @param arqs object
-#' @param ... other
+#' @param only_x boolean. Is the answers present on file names?
 #'
 #' @export
-prepare <- function(arqs, ...) {
+prepare <- function(arqs, only_x = FALSE) {
   UseMethod('prepare')
 }
 
@@ -12,8 +12,8 @@ prepare <- function(arqs, ...) {
 #'
 #' Prepare answare and features for modeling. Expect '_' as the answer separator.
 #'
-#'@param arqs arqs read
-#'@param only_x boolean. Is the answers present on file names?
+#' @param arqs arqs read
+#' @param only_x boolean. Is the answers present on file names?
 #'
 #'@export
 prepare.captcha <- function(arqs, only_x = FALSE) {

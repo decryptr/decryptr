@@ -26,5 +26,6 @@ classify.captcha <- function(x, dest, answer = NULL, ...) {
   file.copy(x, out)
   # adicionar mensagem
   # class(out) <- c("captcha", "captcha_image", "tjrs")
+  class(out) <- c('captcha')
   invisible(out)
 }
