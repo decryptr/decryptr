@@ -17,6 +17,8 @@ prepare <- function(arqs, only_x = FALSE) {
 #'
 #'@export
 prepare.captcha <- function(arqs, only_x = FALSE) {
+  x <- plyr::laply(arqs, load_image)
+  if (length(arqs) == 1) dim(x) <- c(1, dim(x))
   if (!only_x && length(arqs) > 1) {
     words <- arqs %>%
       basename() %>%
@@ -25,15 +27,16 @@ prepare.captcha <- function(arqs, only_x = FALSE) {
       magrittr::extract(TRUE, 2)
     all_letters <- unique(sort(unlist(strsplit(words, ''))))
     y <- plyr::laply(words, create_response, all_letters)
-    return(list(y = y, x = x))
+    l <- list(y = y, x = x)
+  } else {
+    l <- list(y = NULL, x = x)
   }
-  x <- plyr::laply(arqs, load_image)
-  if (length(arqs) == 1) dim(x) <- c(1, dim(x))
-  return(list(y = NULL, x = x))
+  class(l) <- 'captcha'
+  return(l)
 }
 
-create_response <- function(x, all_letters) {
-  a <- strsplit(x, '')[[1]]
+create_response <- function(y, all_letters) {
+  a <- strsplit(y, '')[[1]]
   n <- length(a)
   n_letters <- length(all_letters)
   if (length(unique(a)) == 1) {
@@ -46,6 +49,6 @@ create_response <- function(x, all_letters) {
   sua <- sort(unique(a))
   colnames(mm) <- sua
   m[, sua] <- mm
-  attributes(m) <- list(dim = c(n, n_letters))
+  # attributes(m) <- list(dim = c(n, n_letters))
   m
 }
