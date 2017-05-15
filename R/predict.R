@@ -13,7 +13,12 @@
 #' @export
 predict.captcha <- function(object, ...) {
   arq <- list(...)$arq
-  predict(object, newdata = prepare(arq))
+  X <- prepare(arq)$x
+  pred_ids <- predict(object$model, X) %>%
+    apply(c(1, 2), which.max) %>%
+    as.vector()
+  object$labs[pred_ids] %>%
+    paste(collapse = '')
 }
 
 # break_captcha.tjrs <- function(arq, model = NULL) {
