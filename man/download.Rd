@@ -4,7 +4,7 @@
 \alias{download}
 \title{Download captcha from any site}
 \usage{
-download(url, dest = NULL, secure = FALSE)
+download(url, dest = NULL, secure = FALSE, type = "jpeg")
 }
 \arguments{
 \item{url}{url to download}
@@ -12,6 +12,8 @@ download(url, dest = NULL, secure = FALSE)
 \item{dest}{destination}
 
 \item{secure}{use ssl verifypeer as FALSE}
+
+\item{type}{image extension. Normally 'jpeg' or 'png'}
 }
 \description{
 Generic download function
