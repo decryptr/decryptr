@@ -8,7 +8,7 @@ read_captcha <- function(path) {
   ext <- tolower(tools::file_ext(basename(path)))
   # Return path
   if (all(ext %in% c("jpeg", "jpg", "png"))) {
-    message("File(s) was located and will be brought to memory when used")
+    # message("File(s) was located and will be brought to memory when used")
     class(path) <- c("captcha")
     return(path)
   }
