@@ -1,0 +1,105 @@
+---
+title: "Breaking captcha tutorial"
+author: "Julio Trecenti"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Breaking captcha tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+This vignette shows how to use `decryptr` to break TRTs captcha.
+
+```{r}
+devtools::load_all()
+```
+
+# Download images
+
+Firstly, create a folder and download images.
+
+```{r}
+dest <- '~/data-raw/decryptr/trt'
+dir.create(dest, recursive = TRUE, showWarnings = FALSE)
+plyr::l_ply(1:1000, function(x) download_trt(dest), .progress = 'text')
+```
+
+# Image classification
+
+```{r}
+# get names of classified images
+classified <- dir(dest, pattern = '_') %>% 
+  stringr::str_extract('[^_]+') %>% 
+  stringr::str_c(collapse = '|')
+
+# create list of unclassified images
+not_classified <- dir(dest, full.names = TRUE) %>% 
+  magrittr::extract(!stringr::str_detect(., classified))
+
+# classify all images
+purrr::walk(not_classified, ~classify(read_captcha(.x), dirname(.x)))
+```
+
+# Data preparation
+
+```{r}
+# get names of classified images
+classified <- dir(dest, pattern = '_', full.names = TRUE) %>% 
+  read_captcha()
+prepared_data <- prepare(classified)
+str(prepared_data)
+str(prepared_data)
+```
+
+# Model!
+
+Test, train, validation
+
+```{r}
+set.seed(19910402)
+library(keras)
+m <- model(prepared_data, epochs = 500)
+```
+
+
+# Predict
+
+```{r}
+dest2 <- paste0(dest, '2')
+dir.create(dest2)
+plyr::l_ply(1:10, function(x) download_trt(dest2), .progress = 'text')
+arqs <- dir(dest2, full.names = TRUE)
+```
+
+```{r}
+a <- read_captcha(sample(arqs, 1))
+plot(a)
+predict(m, arq = a)
+```
+
+
+# Results
+
+```{r}
+probs <- predict(model, x_valid)
+predicoes <- apply(probs, c(1, 2), which.max)
+y_valid_obs <- apply(y_valid, c(1, 2), which.max)
+mean(abs(probs - y_valid))
+mean(predicoes == y_valid_obs)
+purrr::map_dbl(1:6, ~mean(predicoes[,.x] == y_valid_obs[,.x]))
+# matriz de erros
+nm <- colnames(y_valid[1,,])
+tibble::tibble(
+  y_pred = as.vector(apply(predicoes, 1, function(i) nm[i])),
+  y_obs = as.vector(apply(y_valid_obs, 1, function(i) nm[i]))
+) %>% 
+  dplyr::count(y_obs, y_pred) %>% 
+  tidyr::spread(y_pred, n, fill = '.') %>% 
+  View()
+```
+
