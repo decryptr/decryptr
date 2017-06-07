@@ -26,7 +26,7 @@ Firstly, create a folder and download images.
 ```{r}
 dest <- '~/data-raw/decryptr/trt'
 dir.create(dest, recursive = TRUE, showWarnings = FALSE)
-plyr::l_ply(1:1000, function(x) download_trt(dest), .progress = 'text')
+result <- download_trt(dest, n = 600)
 ```
 
 # Image classification
@@ -39,21 +39,92 @@ classified <- dir(dest, pattern = '_') %>%
 
 # create list of unclassified images
 not_classified <- dir(dest, full.names = TRUE) %>% 
-  magrittr::extract(!stringr::str_detect(., classified))
+  magrittr::extract(!stringr::str_detect(., classified)) %>% 
+  read_captcha()
+
+
+predict(m, arq = read_captcha(not_classified[1]))
 
 # classify all images
-purrr::walk(not_classified, ~classify(read_captcha(.x), dirname(.x)))
+classify(not_classified)
 ```
+
+```{r}
+dest <- '~/data-raw/decryptr/trt3'
+# get names of classified images
+classified <- dir(dest, pattern = '_') %>% 
+  stringr::str_extract('[^_]+') %>% 
+  stringr::str_c(collapse = '|')
+
+# create list of unclassified images
+not_classified <- dir(dest, full.names = TRUE) %>% 
+  magrittr::extract(stringr::str_detect(., 'FALSE')) %>% 
+  read_captcha()
+
+
+predict(m, arq = read_captcha(not_classified[1]))
+
+# classify all images
+classify(not_classified)
+```
+
+
+```{r}
+dir.create('~/data-raw/decryptr/trt4')
+model <- keras::load_model('inst/model.keras')
+labs <- c("2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "d", "e",
+          "f", "h", "j", "k", "m", "n", "r", "s", "t", "u", "v", "w",
+          "x", "y")
+m <- list(model = model, labs = labs)
+class(m) <- 'captcha'
+dest <- '~/data-raw/decryptr/trt4'
+safe_oracle <- purrr::possibly(oracle, FALSE)
+p <- progress::progress_bar$new(total = 1000)
+purrr::walk(1:1000, ~{
+  safe_oracle(m, dest)
+  p$tick()
+})
+
+not_classified <- dir(dest, full.names = TRUE) %>% 
+  magrittr::extract(stringr::str_detect(., 'TRUE')) %>% 
+  read_captcha()
+length(not_classified)
+
+```
+
 
 # Data preparation
 
 ```{r}
 # get names of classified images
-classified <- dir(dest, pattern = '_', full.names = TRUE) %>% 
+dest <- "~/data-raw/decryptr/trt"
+classified1 <- dir(dest, pattern = '_', full.names = TRUE)
+
+dest3 <- "~/data-raw/decryptr/trt3"
+classified2 <- dir(dest3, pattern = '_', full.names = TRUE) %>% 
+  magrittr::extract(stringr::str_detect(., 'TRUE'))
+
+classified <- c(classified1, classified2) %>%
   read_captcha()
+
 prepared_data <- prepare(classified)
 str(prepared_data)
-str(prepared_data)
+```
+
+```{r}
+labs <- c("2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "d", "e",
+          "f", "h", "j", "k", "m", "n", "r", "s", "t", "u", "v", "w",
+          "x", "y")
+m <- list(model = model, labs = labs)
+class(m) <- 'captcha'
+
+classified3 <- dir(dest3, pattern = '_', full.names = TRUE) %>% 
+  magrittr::extract(stringr::str_detect(., 'FALSE'))
+
+i <- 0
+i <- i+1
+plot(read_captcha(classified3[i]))
+predict(m, arq = read_captcha(classified3[i]))
 ```
 
 # Model!
@@ -63,7 +134,7 @@ Test, train, validation
 ```{r}
 set.seed(19910402)
 library(keras)
-m <- model(prepared_data, epochs = 500)
+m <- model(prepared_data, epochs = 100)
 ```
 
 
