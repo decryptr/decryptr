@@ -4,15 +4,27 @@
 \alias{model.captcha}
 \title{Model image captcha using keras}
 \usage{
-\method{model}{captcha}(prepared, epochs = 100)
+\method{model}{captcha}(prepared_data, epochs = 100, prop_test = 0.3,
+  drop_out = 0.8, n_filters = 3, window_size = 5, pooling_size = 3,
+  verbose = TRUE)
 }
 \arguments{
+\item{epochs}{maximum number of epochs}
+
+\item{prop_test}{test proportion}
+
+\item{drop_out}{size of the dropout}
+
+\item{n_filters}{number of filters on conv net}
+
+\item{window_size}{conv net window size}
+
+\item{pooling_size}{max pooling window size}
+
+\item{verbose}{print model specification}
+
 \item{prepared}{prepared data}
-
-\item{epochs}{maximum number of epochs
-
-#@import keras}
 }
 \description{
-Model image captcha using keras
+Tries to adjust an automatic model using keras
 }

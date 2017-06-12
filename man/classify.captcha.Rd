@@ -2,12 +2,13 @@
 % Please edit documentation in R/classify.R
 \name{classify.captcha}
 \alias{classify.captcha}
-\title{Classify captcha}
+\title{Classify captchas}
 \usage{
-\method{classify}{captcha}(x, dest, answer = NULL, ...)
+\method{classify}{captcha}(captcha, dest = dirname(captcha)[1],
+  answer = NULL, ...)
 }
 \arguments{
-\item{x}{object}
+\item{captcha}{object}
 
 \item{dest}{destination}
 
@@ -16,5 +17,5 @@
 \item{...}{other}
 }
 \description{
-Classify captcha
+Classify captchas
 }

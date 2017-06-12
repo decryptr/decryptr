@@ -4,10 +4,10 @@
 \alias{classify}
 \title{Classify captcha}
 \usage{
-classify(x, ...)
+classify(captcha, ...)
 }
 \arguments{
-\item{x}{object}
+\item{captcha}{object}
 
 \item{...}{other}
 }
