@@ -17,8 +17,7 @@ prepare <- function(arqs, only_x = FALSE) {
 #'
 #'@export
 prepare.captcha <- function(arqs, only_x = FALSE) {
-  x <- plyr::laply(arqs, load_image)
-  if (length(arqs) == 1) dim(x) <- c(1, dim(x))
+  x <- abind::abind(purrr::map(arqs, load_image), along = .1)
   if (!only_x && length(arqs) > 1) {
     words <- arqs %>%
       basename() %>%
