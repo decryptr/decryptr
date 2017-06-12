@@ -26,7 +26,9 @@ classify.captcha <- function(captcha, dest = dirname(captcha)[1],
     out <- purrr::map2_chr(captcha, answer,
                            ~classify_one(read_captcha(.x), dest, .y))
   } else {
-    out <- purrr::map_chr(captcha, ~classify_one(read_captcha(.x), dest, ...))
+    out <- purrr::map_chr(captcha, ~classify_one(
+      read_captcha(.x), dest, answer = NULL, ...)
+    )
   }
   invisible(out)
 }
@@ -45,8 +47,9 @@ classify_one <- function(captcha, dest, answer = NULL, ...) {
     if (answer == '' && !is.null(model)) answer <- pred
     if (runif(1) < .1) cat(praise::praise(), "\n")
   }
+  # print(answer)
   nm <- tools::file_path_sans_ext(basename(captcha))
-  ext <- tools::file_ext(captcha)
+  ext <- tools::file_ext(basename(captcha))
   out <- sprintf("%s/%s_%s.%s", dest, nm, answer, ext)
   file.copy(captcha, out)
   class(out) <- c("captcha")
