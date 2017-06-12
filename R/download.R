@@ -7,7 +7,7 @@ download <- function(url, dest, n, secure = FALSE, type = 'jpeg') {
     p$tick()
     result
   })
-  read_captcha(result)
+  invisible(result)
 }
 
 download_one <- function(url, dest, secure, type) {
