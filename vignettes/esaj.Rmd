@@ -118,7 +118,7 @@ head(basename(classified_captchas))
 A função `decryptr::prepare()` lê todas as imagens
 
 ```{r eval=FALSE}
-prepared_data <- prepare(classified_captchas)
+prepared_data <- prepare(read_captcha(head(classified_captchas, 10000)))
 str(prepared_data)
 saveRDS(prepared_data, 'prepared_data.rds')
 ```
@@ -127,17 +127,28 @@ A função `decryptr::model()` cria um modelo automático para os dados.
 
 ```{r eval=FALSE}
 devtools::load_all()
-prepared_data <- readRDS('prepared_data.rds')
-set.seed(199104055)
+prepared_data <- readRDS('prepared_data2.rds')
+
+# n <- dim(prepared_data$y)[1]
+# n_sample <- 18000
+# ids <- sample(seq_len(n), n_sample, replace = FALSE)
+
+# res <- apply(prepared_data$x, c(1, 2, 3), mean)
+# prepared_data$x[,,,1] <- res
+# prepared_data$x[,,,2] <- res
+# prepared_data$x[,,,3] <- res
+# saveRDS(prepared_data, 'prepared_data2.rds')
+
+set.seed(19910409)
 keras_model <- model(prepared_data = prepared_data, 
                      epochs = 40, 
-                     prop_test = .05, 
+                     prop_test = .20, 
                      drop_out = .6, 
                      n_filters = 3,
-                     window_size = 5, 
-                     pooling_size = 2)
+                     window_size = 3, 
+                     pooling_size = 3)
 
-# keras::save_model_hdf5(keras_model$model, '../inst/model_esaj.hdf5')
+keras::save_model_hdf5(keras_model$model, '../inst/model_esaj.hdf5')
 saveRDS(keras_model, '../inst/model_esaj.rds')
 ```
 
