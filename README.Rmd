@@ -1,36 +1,37 @@
+---
+output: github_document
+---
 
-decryptr
-========
+# decryptr
 
 ### Description
 
-`decryptr` is an R package to break CAPTCHAs. It is also an extensible tool built in a way that enables anyone to contribute with their own CAPTCHA-breaking code.
+`decryptr` is an R package to break CAPTCHAs. It is also an extensible tool
+built in a way that enables anyone to contribute with their own CAPTCHA-breaking
+code.
 
 To install `decryptr`, simply run the code below:
 
-``` r
+```{r eval=FALSE}
 if (!require(devtools)) install.packages("devtools")
 devtools::install_github("decryptr/decryptr")
 ```
 
 It is also recommended to install `decryptrModels` package.
 
-``` r
+```{r}
 devtools::install_github("decryptr/decryptrModels")
 ```
 
-    ## Using GitHub PAT from envvar GITHUB_PAT
-
-    ## Skipping install of 'decryptrModels' from a github remote, the SHA1 (e8429064) has not changed since last install.
-    ##   Use `force = TRUE` to force installation
-
 ### Basic usage
 
-`decryptr` has functions for downloading and breaking captchas from multiple sources, one of which is TJMG (a court in southern Brazil). Here is how one could break captchas from TJMG:
+`decryptr` has functions for downloading and breaking captchas from multiple
+sources, one of which is TJMG (a court in southern Brazil). Here is how one
+could break captchas from TJMG:
 
 #### Download and visualise
 
-``` r
+```{r captcha, warning=FALSE, message=FALSE}
 library(decryptr)
 
 # Download captchas
@@ -42,11 +43,9 @@ captcha %>%
   plot()
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/captcha-1.png)
+#### Classify manually 
 
-#### Classify manually
-
-``` r
+```{r eval=FALSE}
 captcha %>% 
   read_captcha() %>% 
   classify()
@@ -56,7 +55,7 @@ captcha %>%
 
 #### Load model and predict
 
-``` r
+```{r}
 # Load model (install decryptrModels package first)
 keras_tjmg <- decryptrModels::read_model('tjmg')
 data('tjmg', package = 'decryptr')
@@ -67,13 +66,11 @@ captcha %>%
   predict(tjmg, arq = .)
 ```
 
-    ## [1] "84232"
-
 ### Performance
 
 Once loaded to memory, Keras models are extremely fast. Also, we don't run any pre-processing on the image.
 
-``` r
+```{r}
 break_captcha <- function() {
   captcha %>% 
     read_captcha() %>% 
@@ -82,12 +79,6 @@ break_captcha <- function() {
 
 microbenchmark::microbenchmark(break_captcha())
 ```
-
-    ## Unit: milliseconds
-    ##             expr      min       lq     mean  median       uq      max
-    ##  break_captcha() 12.54039 13.39467 16.42615 14.0669 16.00585 172.3118
-    ##  neval
-    ##    100
 
 ### Extensibility
 
