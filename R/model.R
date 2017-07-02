@@ -42,11 +42,18 @@ model.captcha <- function(prepared_data,
       activation = "relu"
     ) %>%
     layer_max_pooling_2d(rep(pooling_size, 2)) %>%
+    layer_conv_2d(
+      input_shape = dim(x_train)[-1],
+      filters = dim(y_train)[2] * n_filters,
+      kernel_size = rep(window_size, 2),
+      activation = "relu"
+    ) %>%
+    layer_max_pooling_2d(rep(pooling_size, 2)) %>%
     layer_reshape(list(
       dim(y_train)[2],
       floor(prod(unlist(.$output_shape)) / dim(y_train)[2])
     )) %>%
-    bidirectional(layer_lstm(units = 128, return_sequences = TRUE)) %>%
+    bidirectional(layer_lstm(units = 1024, return_sequences = TRUE)) %>%
     layer_dropout(drop_out) %>%
     layer_dense(dim(y_train)[3], activation = "relu") %>%
     layer_activation("softmax") %>%
