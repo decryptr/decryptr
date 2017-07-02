@@ -12,7 +12,7 @@
 download <- function(url, dest, n, secure = FALSE, type = 'jpeg') {
   dir.create(dest, recursive = TRUE, showWarnings = FALSE)
   safe_download_one <- purrr::possibly(download_one, 'error')
-  p <- progress::progress_bar$new()
+  p <- progress::progress_bar$new(total = n)
   result <- purrr::map_chr(seq_len(n), ~{
     result <- safe_download_one(url, dest, secure, type)
     p$tick()
@@ -62,8 +62,8 @@ download_trt <- function(dest = NULL, n = 1) {
 #'
 #' @export
 download_rfb <- function(dest = NULL, n = 1) {
-  url <- 'http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/cnpjreva_solicitacao2.asp'
-  download(url, dest, n = n)
+  url <- 'http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/captcha/gerarCaptcha.asp'
+  download(url, dest, n = n, type = "png")
 }
 
 #' @rdname download
