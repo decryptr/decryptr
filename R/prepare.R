@@ -17,7 +17,7 @@ prepare <- function(arqs, only_x = FALSE) {
 #'
 #'@export
 prepare.captcha <- function(arqs, only_x = FALSE) {
-  x <- abind::abind(purrr::map(arqs, load_image), along = .1)
+  x <- prepare_x(arqs)
   if (!only_x && length(arqs) > 1) {
     words <- arqs %>%
       basename() %>%
@@ -30,7 +30,7 @@ prepare.captcha <- function(arqs, only_x = FALSE) {
   } else {
     l <- list(y = NULL, x = x)
   }
-  class(l) <- 'captcha'
+  class(l) <- c('captcha', 'prepared')
   return(l)
 }
 
@@ -51,3 +51,29 @@ create_response <- function(y, all_letters) {
   # attributes(m) <- list(dim = c(n, n_letters))
   m
 }
+
+# prepare_x <- function(arqs) {
+#   x <- abind::abind(purrr::map(arqs, load_image), along = .1)
+#   (x[,,,1, drop = FALSE] + x[,,,2, drop = FALSE] + x[,,,3, drop = FALSE]) / 3
+# }
+
+cinza <- function(im) {
+  (im[,,1, drop = FALSE] + im[,,2, drop = FALSE] + im[,,3, drop = FALSE]) / 3
+}
+
+prepare_x <- function(arqs) {
+  im0 <- load_image(arqs[1])
+  dim0 <- dim(im0)
+  X <- array(NA_real_, dim = c(length(arqs), dim0[1], dim0[2], 1))
+  X[1,,,] <- cinza(im0)
+  for (i in seq_along(arqs)[-1]) {
+    im <- load_image(arqs[i])
+    X[i,,,] <- cinza(im)
+  }
+  X
+}
+
+print.prepared <- function(x) {
+  str(x)
+}
+
