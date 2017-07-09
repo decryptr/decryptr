@@ -50,7 +50,7 @@ classify(not_classified)
 ```
 
 ```{r}
-dest <- '~/data-raw/decryptr/trt3'
+dest <- '~/data-raw/decryptr/trt'
 # get names of classified images
 classified <- dir(dest, pattern = '_') %>% 
   stringr::str_extract('[^_]+') %>% 
@@ -173,4 +173,172 @@ tibble::tibble(
   tidyr::spread(y_pred, n, fill = '.') %>% 
   View()
 ```
+
+
+--------------------------------------------------------------------------------
+
+
+```{r}
+library(decryptr)
+classify_dbc_one <- function(arq, user, pass, ntry = 10) {
+  base64 <- arq %>% 
+    readr::read_file_raw() %>% 
+    base64enc::base64encode() %>% 
+    sprintf(fmt = 'base64:%s', .)
+  captcha_data <- list(username = user, password = pass, captchafile = base64)
+  url_captcha <- 'http://api.dbcapi.me/api/captcha'
+  
+  r_captcha <- httr::POST(url_captcha, body = captcha_data)
+  status <- httr::status_code(r_captcha)
+  ct <- httr::content(r_captcha)
+  cont <- 1
+  while((status != 200 || ct$text == '') && cont <= 10) {
+    Sys.sleep(.5)
+    r_captcha <- httr::POST(url_captcha, body = captcha_data)
+    status <- httr::status_code(r_captcha)
+    ct <- httr::content(r_captcha)
+    cont <- cont + 1
+  }
+  arq_captcha <- decryptr::read_captcha(arq)
+  decryptr::classify(arq_captcha, answer = tolower(ct$text))
+  invisible(TRUE)
+}
+classify_dbc <- function(arqs, user, pass) {
+  n <- length(arqs)
+  safe_classify_dbc_one <- purrr::possibly(classify_dbc_one, FALSE)
+  p <- progress::progress_bar$new(total = n)
+  result <- purrr::map_lgl(arqs, ~{
+    result <- safe_classify_dbc_one(.x, user, pass)
+    p$tick()
+    result
+  })
+  result
+}
+```
+
+```{r}
+# download_trt(dest = '~/data-raw/decryptr/trt_dbc/', 4999)
+arqs_class <- '~/data-raw/decryptr/trt_dbc' %>% 
+  dir(full.names = TRUE, pattern = "_") %>% 
+  basename() %>% 
+  stringr::str_extract('[a-z0-9]+') %>% 
+  glue::collapse('|')
+
+arqs <- dir('~/data-raw/decryptr/trt_dbc', full.names = TRUE) %>% 
+  magrittr::extract(!stringr::str_detect(., arqs_class)) %>% 
+  read_captcha()
+
+classify(arqs)
+
+```
+
+```{r}
+library(decryptr)
+dest_dir <- '~/data-raw/decryptr/trt'
+classified_captchas <- dest_dir %>% 
+  dir(full.names = TRUE, pattern = '_') %>% 
+  magrittr::extract(file.size(.) > 0) %>% 
+  read_captcha()
+
+# purrr::walk(seq_along(classified_captchas), ~{
+#   print(.x)
+#   prepare(read_captcha(classified_captchas[c(1, .x)]))
+# })
+# 
+# classified_captchas[2303] %>% 
+#   read_captcha() %>% file.remove()
+# 
+# a <- classified_captchas %>% 
+#   stringr::str_subset('WRONG')
+# b <- classified_captchas %>% 
+#   stringr::str_subset('_ ') %>% 
+#   stringr::str_replace_all('_ +', '_')
+# file.rename(a, b)
+
+prepared_trt <- prepare(classified_captchas)
+str(prepared_trt)
+saveRDS(prepared_trt, '~/decryptr/decryptr/vignettes/prepared_trt.rds')
+```
+
+```{r}
+dest_dir <- '~/data-raw/decryptr/trt_oracle'
+pat <- 'FALSE'
+# get names of classified image
+classified <- dir(dest_dir, pattern = pat, full.names = TRUE) %>% 
+  sort()
+classified_original <- dir(dest_dir, pattern = pat) %>% 
+  stringr::str_extract('[a-z0-9]+') %>% 
+  sprintf('%s/%s.jpeg', dest_dir, .) %>% 
+  sort()
+for(i in 1:length(classified)) {
+  classify(read_captcha(classified_original[i]))
+  file.remove(classified[i])
+}
+```
+
+```{r}
+'~/data-raw/decryptr/trt_oracle' %>% 
+  dir(full.names = TRUE, pattern = '^[^_]+$') %>% 
+  file.remove()
+```
+
+```{r}
+a <- '~/data-raw/decryptr/trt_oracle' %>% 
+  dir(full.names = TRUE, pattern = 'TRUE')
+b <- a %>% stringr::str_replace_all('_TRUE_', '_')
+file.rename(a, b)
+```
+
+
+# classificando com oraculo
+
+```{r}
+model <- list(
+  labs = dimnames(prepared_trt$y)[[3]], 
+  model = load_model_hdf5('~/decryptr/decryptrModels/inst/keras/rfb-03.hdf5')
+)
+class(model) <- 'captcha'
+
+
+
+arq <- download_rfb('tests_rfb', 1) %>% read_captcha()
+plot(arq)
+(x <- predict(model, arq = arq))
+classify(arq, answer = x)
+
+length(dir('tests_rfb')) / 2
+
+
+
+
+
+
+oracle_dir <- '~/data-raw/decryptr/trt_oracle'
+safe_oracle <- purrr::possibly(oracle, 'erro')
+res <- purrr::map_chr(1:17, ~{
+  Sys.sleep(1)
+  a <- safe_oracle(model, oracle_dir)
+  cat(a)
+  if (!isTRUE(a)) {
+    cat('...bora esperar...')
+    Sys.sleep(10)
+  } 
+  cat('\n')
+  as.character(a)
+})
+
+
+length(dir(oracle_dir, pattern = 'TRUE'))
+length(dir(oracle_dir, pattern = 'FALSE'))
+length(dir(oracle_dir)) / 2
+
+
+
+```
+
+
+
+
+
+
 

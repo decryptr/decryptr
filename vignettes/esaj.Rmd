@@ -118,12 +118,93 @@ head(basename(classified_captchas))
 A função `decryptr::prepare()` lê todas as imagens
 
 ```{r eval=FALSE}
-prepared_data <- prepare(read_captcha(head(classified_captchas, 10000)))
+prepared_data <- prepare(classified_captchas)
 str(prepared_data)
 saveRDS(prepared_data, 'prepared_data.rds')
 ```
 
 A função `decryptr::model()` cria um modelo automático para os dados.
+
+
+### RFB MODEL
+
+```{r}
+prepared_data <- readRDS('prepared_data.rds')
+
+set.seed(474747)
+prop_test <- .05
+n_tot <- nrow(prepared_data$y)
+n_test <- round(nrow(prepared_data$y) * prop_test)
+my_sample <- sample(seq_len(n_tot), n_tot - n_test, replace = FALSE)
+
+x_train <- prepared_data$x[my_sample,,,, drop = FALSE]
+y_train <- prepared_data$y[my_sample,,, drop = FALSE]
+
+x_test <- prepared_data$x[-my_sample,,,, drop = FALSE]
+y_test <- prepared_data$y[-my_sample,,, drop = FALSE]
+
+
+library(keras)
+# MODELO DO DANIEL WTF ---------------------------------------------------------
+model <- keras_model_sequential()
+model %>%
+  layer_conv_2d(
+    input_shape = dim(x_train)[-1],
+    filters = 32,
+    kernel_size = c(5,5),
+    padding = "same",
+    activation = "relu"
+  ) %>%
+  layer_max_pooling_2d() %>%
+  layer_conv_2d(
+    filters =  64,
+    kernel_size = c(5,5),
+    padding = "same",
+    activation = "relu"
+  ) %>%
+  layer_max_pooling_2d() %>%
+  layer_conv_2d(
+    filters =  128,
+    kernel_size = c(5,5),
+    padding = "same",
+    activation = "relu"
+  ) %>%
+  layer_max_pooling_2d() %>%
+  layer_flatten() %>%
+  layer_dense(units = 128) %>%
+  layer_dense(units = prod(dim(y_train)[-1])) %>%
+  layer_reshape(target_shape = dim(y_train)[-1]) %>%
+  layer_activation("softmax")
+
+# compile-----------------------------------------------------------------------
+model %>%
+  compile(
+    optimizer = "adam",
+    loss = "categorical_crossentropy",
+    metrics = "accuracy"
+  )
+
+# fit---------------------------------------------------------------------------
+# model <- load_model_hdf5('~/decryptr/decryptrModels/inst/keras/esaj.hdf5')
+model %>%
+  fit(
+    x = x_train,
+    y = y_train,
+    batch_size = 200,
+    epochs = 100,
+    shuffle = TRUE,
+    validation_data = list(x_test, y_test)
+  )
+
+save_model_hdf5(model, '~/decryptr/decryptrModels/inst/keras/esaj.hdf5')
+```
+
+
+
+
+
+
+
 
 ```{r eval=FALSE}
 devtools::load_all()
@@ -141,14 +222,14 @@ prepared_data <- readRDS('prepared_data2.rds')
 
 set.seed(19910409)
 keras_model <- model(prepared_data = prepared_data, 
-                     epochs = 40, 
+                     epochs = 10, 
                      prop_test = .20, 
-                     drop_out = .6, 
+                     drop_out = .3, 
                      n_filters = 3,
                      window_size = 3, 
-                     pooling_size = 3)
+                     pooling_size = 2)
 
-keras::save_model_hdf5(keras_model$model, '../inst/model_esaj.hdf5')
+keras::save_model_hdf5(model, '../inst/model_esaj.hdf5')
 saveRDS(keras_model, '../inst/model_esaj.rds')
 ```
 
@@ -157,5 +238,15 @@ Finalmente, use a função `predict()` para predizer o resultado.
 ```{r eval=FALSE}
 predict(keras_model, arq = read_captcha('esajcaptcha.png'))
 ## ycnht
+```
+
+```{r}
+url_captcha <- 'http://esaj.tjsp.jus.br/cjsg/imagemCaptcha.do'
+dest_dir <- '~/data-raw/decryptr/esaj'
+me <- download(url_captcha, dest = dest_dir, n = 1, type = 'png')
+me %>% 
+  read_captcha() %>% 
+  plot()
+predict(keras_model, arq = read_captcha(me))
 ```
 

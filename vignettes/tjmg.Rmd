@@ -14,15 +14,9 @@ library(decryptr)
 
 arqs <- dir('~/decryptr/captchaTJMGAudio/data-raw/treino_img', 
             full.names = TRUE, pattern = 'jpg$') %>% 
-  head(1000) %>% 
   read_captcha()
 
-model <- decryptrModels::read_model('tjmg')
-bd <- prepare(arqs)
-
-tjmg <- list(model = model, labs = dimnames(bd$y)[[3]])
-class(tjmg) <- "captcha"
-
-devtools::use_data(tjmg)
+prepared_tjmg <- prepare(arqs)
+saveRDS(prepared_tjmg, 'prepared_tjmg.rds')
 ```
 
