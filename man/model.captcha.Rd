@@ -4,26 +4,26 @@
 \alias{model.captcha}
 \title{Model image captcha using keras}
 \usage{
-\method{model}{captcha}(prepared_data, epochs = 100, prop_test = 0.3,
-  drop_out = 0.8, n_filters = 3, window_size = 5, pooling_size = 3,
-  verbose = TRUE)
+\method{model}{captcha}(prepared_data, n_test = prepared_data$n * 0.1,
+  n_epochs = 30, n_units = 256, batch_size = 64, save_model = TRUE,
+  save_path = "model.hdf5", verbose = TRUE)
 }
 \arguments{
-\item{epochs}{maximum number of epochs}
+\item{prepared_data}{prepared data}
 
-\item{prop_test}{test proportion}
+\item{n_test}{test data size}
 
-\item{drop_out}{size of the dropout}
+\item{n_epochs}{maximum number of epochs}
 
-\item{n_filters}{number of filters on conv net}
+\item{n_units}{number of units to consider in dense layer}
 
-\item{window_size}{conv net window size}
+\item{batch_size}{number of observations to consider in each iteration}
 
-\item{pooling_size}{max pooling window size}
+\item{save_model}{logical. save model on disk?}
+
+\item{save_path}{path to save model}
 
 \item{verbose}{print model specification}
-
-\item{prepared}{prepared data}
 }
 \description{
 Tries to adjust an automatic model using keras
