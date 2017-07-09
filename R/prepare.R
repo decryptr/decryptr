@@ -8,6 +8,25 @@ prepare <- function(arqs, only_x = FALSE) {
   UseMethod('prepare')
 }
 
+#' Predict captcha
+#'
+#' @param arqs object
+#' @param only_x boolean. Is the answers present on file names?
+#'
+#' @export
+prepare.raw <- function(arqs, only_x = TRUE) {
+  # works only for single file
+  im0 <- NULL
+  try(im0 <- png::readPNG(arqs), silent = TRUE)
+  if (is.null(im0)) im0 <- jpeg::readJPEG(arqs)
+  dim0 <- dim(im0)
+  X <- array(NA_real_, dim = c(1, dim0[1], dim0[2], 1))
+  X[1,,,] <- cinza(im0)
+  l <- list(y = NULL, x = X)
+  class(l) <- 'prepared'
+  return(l)
+}
+
 #' Prepare captchas
 #'
 #' Prepare answare and features for modeling. Expect '_' as the answer separator.
@@ -23,14 +42,16 @@ prepare.captcha <- function(arqs, only_x = FALSE) {
       basename() %>%
       tools::file_path_sans_ext() %>%
       stringr::str_match('_([a-zA-Z0-9]+)$') %>%
-      magrittr::extract(TRUE, 2)
+      magrittr::extract(TRUE, 2) %>%
+      tolower()
     all_letters <- unique(sort(unlist(strsplit(words, ''))))
     y <- plyr::laply(words, create_response, all_letters)
     l <- list(y = y, x = x)
   } else {
     l <- list(y = NULL, x = x)
   }
-  class(l) <- c('captcha', 'prepared')
+  l$n <- nrow(x)
+  class(l) <- 'prepared'
   return(l)
 }
 
