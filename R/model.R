@@ -6,72 +6,80 @@ model <- function(prepared, ...) {
 #'
 #' Tries to adjust an automatic model using keras
 #'
-#' @param prepared prepared data
-#' @param epochs maximum number of epochs
-#' @param prop_test test proportion
-#' @param drop_out size of the dropout
-#' @param n_filters number of filters on conv net
-#' @param window_size conv net window size
-#' @param pooling_size max pooling window size
+#' @param prepared_data prepared data
+#' @param n_test test data size
+#' @param n_epochs maximum number of epochs
+#' @param n_units number of units to consider in dense layer
+#' @param batch_size number of observations to consider in each iteration
+#' @param save_model logical. save model on disk?
+#' @param save_path path to save model
 #' @param verbose print model specification
 #'
 #' @import keras
 #' @export
 model.captcha <- function(prepared_data,
-                          epochs = 100,
-                          prop_test = .3,
-                          drop_out = .8,
-                          n_filters = 3,
-                          window_size = 5,
-                          pooling_size = 3,
+                          n_test = prepared_data$n * 0.1,
+                          n_epochs = 30,
+                          n_units = 256,
+                          batch_size = 64,
+                          save_model = TRUE,
+                          save_path = 'model.hdf5',
                           verbose = TRUE) {
-  n_tot <- nrow(prepared_data$y)
-  n_test <- round(nrow(prepared_data$y) * prop_test)
+  n_tot <- prepared_data$n
+  if (n_tot < n_test) stop('n_test should be less than your data rows.')
   my_sample <- sample(seq_len(n_tot), n_tot - n_test, replace = FALSE)
-  x_train <- prepared_data$x[my_sample,,,]
-  y_train <- prepared_data$y[my_sample,,]
-  x_test <- prepared_data$x[-my_sample,,,]
-  y_test <- prepared_data$y[-my_sample,,]
   ################################################
   model <- keras_model_sequential()
   model %>%
     layer_conv_2d(
-      input_shape = dim(x_train)[-1],
-      filters = dim(y_train)[2] * n_filters,
-      kernel_size = rep(window_size, 2),
+      input_shape = dim(prepared_data$x)[-1],
+      filters = 32,
+      kernel_size = c(5,5),
+      padding = "same",
       activation = "relu"
     ) %>%
-    layer_max_pooling_2d(rep(pooling_size, 2)) %>%
+    layer_max_pooling_2d() %>%
     layer_conv_2d(
-      input_shape = dim(x_train)[-1],
-      filters = dim(y_train)[2] * n_filters,
-      kernel_size = rep(window_size, 2),
+      filters =  64,
+      kernel_size = c(5,5),
+      padding = "same",
       activation = "relu"
     ) %>%
-    layer_max_pooling_2d(rep(pooling_size, 2)) %>%
-    layer_reshape(list(
-      dim(y_train)[2],
-      floor(prod(unlist(.$output_shape)) / dim(y_train)[2])
-    )) %>%
-    bidirectional(layer_lstm(units = 1024, return_sequences = TRUE)) %>%
-    layer_dropout(drop_out) %>%
-    layer_dense(dim(y_train)[3], activation = "relu") %>%
-    layer_activation("softmax") %>%
-    compile(
-      optimizer = "adagrad",
-      loss = "categorical_crossentropy",
-      metrics = "accuracy"
-    )
+    layer_max_pooling_2d() %>%
+    layer_conv_2d(
+      filters =  128,
+      kernel_size = c(5,5),
+      padding = "same",
+      activation = "relu"
+    ) %>%
+    layer_max_pooling_2d() %>%
+    layer_flatten() %>%
+    layer_dense(units = n_units) %>%
+    layer_dropout(.1) %>%
+    layer_dense(units = prod(dim(prepared_data$y)[-1])) %>%
+    layer_reshape(target_shape = dim(prepared_data$y)[-1]) %>%
+    layer_activation("softmax")
   if (verbose) print(model)
   ################################################
   model %>%
-    fit(
-      x = x_train,
-      y = y_train,
-      batch_size = 100,
-      epochs = epochs,
-      validation_data = list(x_test, y_test)
+    compile(
+      optimizer = "adam",
+      loss = "categorical_crossentropy",
+      metrics = "accuracy"
     )
+  model %>%
+    fit(
+      x = prepared_data$x[my_sample,,,, drop = FALSE],
+      y = prepared_data$y[my_sample,,, drop = FALSE],
+      batch_size = batch_size,
+      epochs = n_epochs,
+      shuffle = TRUE,
+      validation_data = list(
+        prepared_data$x[-my_sample,,,, drop = FALSE],
+        prepared_data$y[-my_sample,,, drop = FALSE]
+      )
+    )
+  if (save_model) save_model_hdf5(model, save_path)
   ################################################
   object <- list(model = model, labs = dimnames(y_train)[[3]])
   class(object) <- 'captcha'
