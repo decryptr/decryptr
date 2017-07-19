@@ -7,7 +7,12 @@ vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+
 ---
+
+```{r}
+knitr::opts_chunk$set(eval=FALSE)
+```
 
 ## Download
 

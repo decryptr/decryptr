@@ -24,8 +24,8 @@ load_image <- function(x, ...) {
 #' @export
 plot.captcha <- function(x, y, ...) {
   img <- load_image(x)
-  op <- par(mar = rep(0, 4))
+  op <- graphics::par(mar = rep(0, 4))
   graphics::plot(grDevices::as.raster(img))
-  par(op)
+  graphics::par(op)
 }
 

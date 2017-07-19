@@ -2,8 +2,17 @@
 title: "Untitled"
 author: "J"
 date: "July 8, 2017"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
+```{r}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
 
 # ultimate model
 

@@ -15,22 +15,15 @@ Encoding: UTF-8
 LazyData: true
 Imports:
   magrittr,
-  dplyr,
   httr,
   jpeg,
   png,
-  raster,
-  stringr,
-  tibble,
-  tidyr,
   grDevices,
-  graphics,
   readr,
   plyr,
   purrr,
-  praise,
   keras,
-  abind
+  progress
 Remotes:
   rstudio/keras
 RoxygenNote: 6.0.1

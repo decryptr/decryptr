@@ -33,7 +33,14 @@ model.captcha <- function(prepared_data,
   model %>%
     layer_conv_2d(
       input_shape = dim(prepared_data$x)[-1],
-      filters = 32,
+      filters = 16,
+      kernel_size = c(5,5),
+      padding = "same",
+      activation = "relu"
+    ) %>%
+    layer_max_pooling_2d() %>%
+    layer_conv_2d(
+      filters =  32,
       kernel_size = c(5,5),
       padding = "same",
       activation = "relu"
@@ -41,13 +48,6 @@ model.captcha <- function(prepared_data,
     layer_max_pooling_2d() %>%
     layer_conv_2d(
       filters =  64,
-      kernel_size = c(5,5),
-      padding = "same",
-      activation = "relu"
-    ) %>%
-    layer_max_pooling_2d() %>%
-    layer_conv_2d(
-      filters =  128,
       kernel_size = c(5,5),
       padding = "same",
       activation = "relu"

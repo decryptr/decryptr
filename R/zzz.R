@@ -1,6 +1,6 @@
 globalVariables(c("arq", "n", ".", "g", "r", "b", "y", "x", "group", "letras",
                   "letras", "rowname", "v", "letra", "xy", "cor", "key", "value",
-                  'model.matrix', 'predict'))
+                  'model.matrix', 'predict', "y_train"))
 
 
 #' Pipe operator

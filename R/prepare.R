@@ -41,8 +41,9 @@ prepare.captcha <- function(arqs, only_x = FALSE) {
     words <- arqs %>%
       basename() %>%
       tools::file_path_sans_ext() %>%
-      stringr::str_match('_([a-zA-Z0-9]+)$') %>%
-      magrittr::extract(TRUE, 2) %>%
+      regmatches(gregexpr('_([a-zA-Z0-9]+)$', .), FALSE) %>%
+      unlist() %>%
+      substr(2, nchar(.)) %>%
       tolower()
     all_letters <- unique(sort(unlist(strsplit(words, ''))))
     y <- plyr::laply(words, create_response, all_letters)
@@ -92,9 +93,5 @@ prepare_x <- function(arqs) {
     X[i,,,] <- cinza(im)
   }
   X
-}
-
-print.prepared <- function(x) {
-  str(x)
 }
 

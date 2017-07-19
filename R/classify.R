@@ -45,7 +45,7 @@ classify_one <- function(captcha, dest, answer = NULL, ...) {
     }
     answer <- readline(prompt = pr)
     if (answer == '' && !is.null(model)) answer <- pred
-    if (runif(1) < .1) cat(praise::praise(), "\n")
+    # if (runif(1) < .1) cat(praise::praise(), "\n")
   }
   # print(answer)
   nm <- tools::file_path_sans_ext(basename(captcha))
