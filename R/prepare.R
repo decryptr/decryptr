@@ -23,7 +23,7 @@ prepare.raw <- function(arqs, only_x = TRUE) {
   X <- array(NA_real_, dim = c(1, dim0[1], dim0[2], 1))
   X[1,,,] <- cinza(im0)
   l <- list(y = NULL, x = X)
-  class(l) <- 'prepared'
+  class(l) <- c('prepared', 'captcha')
   return(l)
 }
 
