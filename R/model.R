@@ -1,5 +1,5 @@
 model <- function(prepared, ...) {
-  UseMethod('model')
+  UseMethod("model")
 }
 
 #' Model image captcha using keras
@@ -23,10 +23,10 @@ model.captcha <- function(prepared_data,
                           n_units = 256,
                           batch_size = 64,
                           save_model = TRUE,
-                          save_path = 'model.hdf5',
+                          save_path = "model.hdf5",
                           verbose = TRUE) {
   n_tot <- prepared_data$n
-  if (n_tot < n_test) stop('n_test should be less than your data rows.')
+  if (n_tot < n_test) stop("n_test should be less than your data rows.")
   my_sample <- sample(seq_len(n_tot), n_tot - n_test, replace = FALSE)
   ################################################
   model <- keras_model_sequential()
@@ -34,21 +34,21 @@ model.captcha <- function(prepared_data,
     layer_conv_2d(
       input_shape = dim(prepared_data$x)[-1],
       filters = 16,
-      kernel_size = c(5,5),
+      kernel_size = c(5, 5),
       padding = "same",
       activation = "relu"
     ) %>%
     layer_max_pooling_2d() %>%
     layer_conv_2d(
-      filters =  32,
-      kernel_size = c(5,5),
+      filters = 32,
+      kernel_size = c(5, 5),
       padding = "same",
       activation = "relu"
     ) %>%
     layer_max_pooling_2d() %>%
     layer_conv_2d(
-      filters =  64,
-      kernel_size = c(5,5),
+      filters = 64,
+      kernel_size = c(5, 5),
       padding = "same",
       activation = "relu"
     ) %>%
@@ -69,19 +69,19 @@ model.captcha <- function(prepared_data,
     )
   model %>%
     fit(
-      x = prepared_data$x[my_sample,,,, drop = FALSE],
-      y = prepared_data$y[my_sample,,, drop = FALSE],
+      x = prepared_data$x[my_sample, , , , drop = FALSE],
+      y = prepared_data$y[my_sample, , , drop = FALSE],
       batch_size = batch_size,
       epochs = n_epochs,
       shuffle = TRUE,
       validation_data = list(
-        prepared_data$x[-my_sample,,,, drop = FALSE],
-        prepared_data$y[-my_sample,,, drop = FALSE]
+        prepared_data$x[-my_sample, , , , drop = FALSE],
+        prepared_data$y[-my_sample, , , drop = FALSE]
       )
     )
   if (save_model) save_model_hdf5(model, save_path)
   ################################################
-  object <- list(model = model, labs = dimnames(y_train)[[3]])
-  class(object) <- 'captcha'
+  object <- list(model = model, labs = dimnames(prepared_data$y)[[3]])
+  class(object) <- "captcha"
   object
 }

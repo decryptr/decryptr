@@ -15,4 +15,3 @@ read_captcha <- function(path) {
   # Error
   stop("All files must have extensions 'jpeg', 'jpg' or 'png'.")
 }
-

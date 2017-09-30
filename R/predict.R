@@ -18,7 +18,7 @@ predict.captcha <- function(object, ...) {
   pred_ids <- predict(object$model, X) %>%
     apply(c(1, 2), which.max) %>%
     as.vector()
-  paste(object$labs[pred_ids], collapse = '')
+  paste(object$labs[pred_ids], collapse = "")
 }
 
 # break_captcha.tjrs <- function(arq, model = NULL) {

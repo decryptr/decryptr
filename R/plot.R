@@ -28,4 +28,3 @@ plot.captcha <- function(x, y, ...) {
   graphics::plot(grDevices::as.raster(img))
   graphics::par(op)
 }
-

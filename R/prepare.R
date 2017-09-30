@@ -5,7 +5,7 @@
 #'
 #' @export
 prepare <- function(arqs, only_x = FALSE) {
-  UseMethod('prepare')
+  UseMethod("prepare")
 }
 
 #' Predict captcha
@@ -21,7 +21,7 @@ prepare.raw <- function(arqs, only_x = TRUE) {
   if (is.null(im0)) im0 <- jpeg::readJPEG(arqs)
   dim0 <- dim(im0)
   X <- array(NA_real_, dim = c(1, dim0[1], dim0[2], 1))
-  X[1,,,] <- cinza(im0)
+  X[1, , , ] <- cinza(im0)
   l <- list(y = NULL, x = X)
   class(l) <- c("captcha", "prepared")
   return(l)
@@ -34,30 +34,30 @@ prepare.raw <- function(arqs, only_x = TRUE) {
 #' @param arqs arqs read
 #' @param only_x boolean. Is the answers present on file names?
 #'
-#'@export
+#' @export
 prepare.captcha <- function(arqs, only_x = FALSE) {
   x <- prepare_x(arqs)
   if (!only_x && length(arqs) > 1) {
     words <- arqs %>%
       basename() %>%
       tools::file_path_sans_ext() %>%
-      regmatches(gregexpr('_([a-zA-Z0-9]+)$', .), FALSE) %>%
+      regmatches(gregexpr("_([a-zA-Z0-9]+)$", .), FALSE) %>%
       unlist() %>%
       substr(2, nchar(.)) %>%
       tolower()
-    all_letters <- unique(sort(unlist(strsplit(words, ''))))
+    all_letters <- unique(sort(unlist(strsplit(words, ""))))
     y <- plyr::laply(words, create_response, all_letters)
     l <- list(y = y, x = x)
   } else {
     l <- list(y = NULL, x = x)
   }
   l$n <- nrow(x)
-  class(l) <- 'prepared'
+  class(l) <- "prepared"
   return(l)
 }
 
 create_response <- function(y, all_letters) {
-  a <- strsplit(y, '')[[1]]
+  a <- strsplit(y, "")[[1]]
   n <- length(a)
   n_letters <- length(all_letters)
   if (length(unique(a)) == 1) {
@@ -80,18 +80,17 @@ create_response <- function(y, all_letters) {
 # }
 
 cinza <- function(im) {
-  (im[,,1, drop = FALSE] + im[,,2, drop = FALSE] + im[,,3, drop = FALSE]) / 3
+  (im[, , 1, drop = FALSE] + im[, , 2, drop = FALSE] + im[, , 3, drop = FALSE]) / 3
 }
 
 prepare_x <- function(arqs) {
   im0 <- load_image(arqs[1])
   dim0 <- dim(im0)
   X <- array(NA_real_, dim = c(length(arqs), dim0[1], dim0[2], 1))
-  X[1,,,] <- cinza(im0)
+  X[1, , , ] <- cinza(im0)
   for (i in seq_along(arqs)[-1]) {
     im <- load_image(arqs[i])
-    X[i,,,] <- cinza(im)
+    X[i, , , ] <- cinza(im)
   }
   X
 }
-
