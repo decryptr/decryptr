@@ -98,6 +98,14 @@ prepared_rfb <- prepare(classified_captchas)
 saveRDS(prepared_rfb, '~/decryptr/decryptr/vignettes/prepared_rfb.rds')
 ```
 
+## Model
+
+```{r}
+prepared_rfb <- readRDS('prepared_rfb.rds')
+m <- decryptr:::model(prepared_rfb)
+prepared_rfb$n <- nrow(prepared_rfb$x)
+m <- decryptr:::model.captcha(prepared_rfb, n_epochs = 2)
+```
 
 
 
