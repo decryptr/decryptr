@@ -34,7 +34,7 @@ captcha_download <- function(url, n = 1, dest = ".", secure = FALSE,
   result <- purrr::map_chr(seq_len(n), ~{
     result <- safe_download_one(url, dest, secure, .default)
     p$tick()
-    result[!is.null(result)][[1]]
+    as.character(result[!sapply(result, is.null)][[1]])
   })
   invisible(result)
 }
