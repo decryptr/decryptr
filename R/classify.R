@@ -1,57 +1,90 @@
-#' Classify captcha
+#' @title Classify captchas with their answers
 #'
-#' @param captcha object
-#' @param ... other
+#' @description Given one or more captcha files, this function
+#' prompts you to break them mannually so that later you can train
+#' a model with those answers. Answered captchas are saved at `path`
+#' with their answers in the filename separated by an underscore.
+#'
+#' @param captchas A vector with the paths to multiple captchas
+#' @param answers Either `NULL` (for interactive classification) or
+#' a vector with answers for the captchas
+#' @param path Where to save the renamed (answered) captcha files
+#' (if `NULL`, will save each file on the same folder as its unanswered
+#' counterpart)
+#' @param rm_old Whether or not to delete unanswered captchas after
+#' copying and renaming them
+#' @param ... Other arguments passed on to [read_captcha()]
+#'
+#' @return A vector with the paths to the newly created files
 #'
 #' @export
-classify <- function(captcha, ...) {
-  UseMethod("classify")
-}
+classify <- function(captchas, answers = NULL, path = NULL, rm_old = FALSE, ...) {
 
-#' Classify captchas
-#'
-#' @param captcha object
-#' @param dest destination
-#' @param answer answer
-#' @param ... other
-#'
-#' @export
-classify.captcha <- function(captcha, dest = dirname(captcha)[1],
-                             answer = NULL, ...) {
-  dir.create(dest, recursive = TRUE, showWarnings = FALSE)
-  if (!is.null(answer)) {
-    if (length(answer) != length(captcha))
-      stop("When answer is not null, captcha
-           files and answers must have same length.")
-    out <- purrr::map2_chr(captcha, answer,
-                           ~classify_one(read_captcha(.x), dest, .y))
+  # Create directory if necessary
+  if (!is.null(path)) { dir.create(path, FALSE, TRUE) }
+
+  if (!is.null(answers)) {
+
+    # Stop if answers don't match captchas
+    stopifnot(length(answers) == length(captchas))
+
+    # Iterate over each captcha
+    files <- purrr::map2_chr(
+      captchas, answers, classify_,
+      path = path, rm_old = rm_old, ...)
+
   } else {
-    out <- purrr::map_chr(captcha, ~classify_one(
-      read_captcha(.x), dest, answer = NULL, ...)
-    )
+
+    # Prompt for each captcha
+    files <- purrr::map_chr(
+      captchas, classify_, ans = NULL,
+      path = path, rm_old = rm_old, ...)
   }
-  invisible(out)
+
+  return(files)
 }
 
-classify_one <- function(captcha, dest, answer = NULL, ...) {
-  model <- list(...)$model
-  if (is.null(answer)) {
-    graphics::plot(captcha)
-    if (!is.null(model)) {
-      pred <- predict(model, arq = captcha)
-      pr <- sprintf("Answer (%s): ", pred)
+#' Classify a captcha with its answer
+#'
+#' @param cap The paths to a captcha
+#' @param ans Either `NULL` (for interactive classification) or
+#' a string with the answer for the captcha
+#' @param path Where to save the renamed (answered) captcha file
+#' (if `NULL`, will save file on the same folder as its unanswered
+#' counterpart)
+#' @param rm_old Whether or not to delete unanswered captcha after
+#' copying and renaming them
+#' @param ... Other arguments passed on to [read_captcha()]
+#'
+classify_ <- function(cap, ans, path, rm_old, ...) {
+
+  # Read captcha
+  cap <- read_captcha(cap)
+
+  # If interactive, prompt for answer
+  if (is.null(ans)) {
+
+    # If passed a model, use it
+    if (!is.null(list(...)$model)) {
+      ans <- decrypt(cap, list(...)$model)
     } else {
-      pr <- "Answer: "
+      graphics::plot(cap)
+      ans <- readline("Answer: ")
     }
-    answer <- readline(prompt = pr)
-    if (answer == '' && !is.null(model)) answer <- pred
-    # if (runif(1) < .1) cat(praise::praise(), "\n")
   }
-  # print(answer)
-  nm <- tools::file_path_sans_ext(basename(captcha))
-  ext <- tools::file_ext(basename(captcha))
-  out <- sprintf("%s/%s_%s.%s", dest, nm, answer, ext)
-  file.copy(captcha, out)
-  class(out) <- c("captcha")
-  invisible(out)
+
+  # Get information about where the file should be saved
+  file <- attr(cap, "file")
+  name <- tools::file_path_sans_ext(basename(file))
+  ext <- tools::file_ext(basename(file))
+  path <- ifelse(is.null(path), dirname(file), normalizePath(path))
+
+  # Build name of new file
+  new_file <- stringr::str_c(path, "/", name, "_", ans, ".", ext)
+
+  # Copy file to new address
+  file.copy(file, new_file)
+  if (rm_old) { file.remove(file) }
+
+  return(new_file)
 }

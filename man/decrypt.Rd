@@ -15,5 +15,5 @@ decrypt(captcha, model)
 }
 \description{
 Given a captcha and a model, returns the text that
-is supposed to break the captcha
+is supposed to break the captcha.
 }

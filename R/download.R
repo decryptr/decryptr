@@ -1,8 +1,8 @@
 #' Download captcha from a site
 #'
-#' \code{captcha_download} is a generic function to download captchas from any
+#' \code{download_captcha} is a generic function to download captchas from any
 #' site, given the url captcha. It is possible to download many captchas at
-#' onde with the \code{n} option. \code{captcha_download_*} are aliases for
+#' onde with the \code{n} option. \code{download_captcha_*} are aliases for
 #' some known captchas of public services in Brazil.
 #'
 #' @param url url to download. Must be a valid url to download the captcha.
@@ -21,15 +21,15 @@
 #'
 #' @examples
 #' \dontrun{
-#'   captcha_download_rfb()
-#'   captcha_download_trt(10, 'my/folder')
-#'   captcha_download("https://goo.gl/sqTQ4Z")
+#'   download_captcha_rfb()
+#'   download_captcha_trt(10, 'my/folder')
+#'   download_captcha("https://goo.gl/sqTQ4Z")
 #' }
 #' @export
-captcha_download <- function(url, n = 1, dest = ".", secure = FALSE,
+download_captcha <- function(url, n = 1, dest = ".", secure = FALSE,
                              .default = "jpeg") {
   dir.create(dest, recursive = TRUE, showWarnings = FALSE)
-  safe_download_one <- purrr::safely(captcha_download_one)
+  safe_download_one <- purrr::safely(download_captcha_one)
   p <- progress::progress_bar$new(total = n)
   result <- purrr::map_chr(seq_len(n), ~{
     result <- safe_download_one(url, dest, secure, .default)
@@ -39,7 +39,7 @@ captcha_download <- function(url, n = 1, dest = ".", secure = FALSE,
   invisible(result)
 }
 
-captcha_download_one <- function(url, dest, secure, .default) {
+download_captcha_one <- function(url, dest, secure, .default) {
   httr::handle_reset(url)
   dest_captcha <- tempfile(pattern = "captcha", tmpdir = dest)
   # Send get request
@@ -55,45 +55,40 @@ captcha_download_one <- function(url, dest, secure, .default) {
   dest_captcha
 }
 
-#' @rdname captcha_download
-#'
+#' @rdname download_captcha
 #' @export
-captcha_download_tjrs <- function(n = 1, dest = ".") {
+download_captcha_tjrs <- function(n = 1, dest = ".") {
   url <- paste0(
     "http://www.tjrs.jus.br/site_php/consulta",
     "/human_check/humancheck_showcode.php"
   )
-  captcha_download(url, dest, n = n)
+  download_captcha(url, dest, n = n)
 }
 
-#' @rdname captcha_download
-#'
+#' @rdname download_captcha
 #' @export
-captcha_download_tjmg <- function(n = 1, dest = ".") {
+download_captcha_tjmg <- function(n = 1, dest = ".") {
   url <- "http://www4.tjmg.jus.br/juridico/sf/captcha.svl"
-  captcha_download(url, dest, n = n)
+  download_captcha(url, dest, n = n)
 }
 
-#' @rdname captcha_download
-#'
+#' @rdname download_captcha
 #' @export
-captcha_download_trt <- function(n = 1, dest = ".") {
+download_captcha_trt <- function(n = 1, dest = ".") {
   url <- "https://pje.trt4.jus.br/consultaprocessual/seam/resource/captcha"
-  captcha_download(url, dest, n = n)
+  download_captcha(url, dest, n = n)
 }
 
-#' @rdname captcha_download
-#'
+#' @rdname download_captcha
 #' @export
-captcha_download_rfb <- function(n = 1, dest = ".") {
+download_captcha_rfb <- function(n = 1, dest = ".") {
   url <- "http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/captcha/gerarCaptcha.asp"
-  captcha_download(url, dest, n = n)
+  download_captcha(url, dest, n = n)
 }
 
-#' @rdname captcha_download
-#'
+#' @rdname download_captcha
 #' @export
-captcha_download_tjrj <- function(n = 1, dest = ".") {
-  url <- ("http://www4.tjrj.jus.br/consultaProcessoWebV2/captcha")
-  captcha_download(url, dest, n = n)
+download_captcha_tjrj <- function(n = 1, dest = ".") {
+  url <- "http://www4.tjrj.jus.br/consultaProcessoWebV2/captcha"
+  download_captcha(url, dest, n = n)
 }

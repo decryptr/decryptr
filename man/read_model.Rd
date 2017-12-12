@@ -4,10 +4,10 @@
 \alias{read_model}
 \title{Read a model from \code{decryptrModels}}
 \usage{
-read_model(model_name)
+read_model(model)
 }
 \arguments{
-\item{model_name}{The name of the model (\code{"rbf"}, \code{"trt"}, \code{"tjmg"} or
+\item{model}{The name of the model (\code{"rbf"}, \code{"trt"}, \code{"tjmg"} or
 \code{"esaj"})}
 }
 \description{
