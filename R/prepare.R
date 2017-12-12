@@ -2,8 +2,6 @@
 #'
 #' @param arqs object
 #' @param only_x boolean. Is the answers present on file names?
-#'
-#' @export
 prepare <- function(arqs, only_x = FALSE) {
   UseMethod("prepare")
 }
@@ -12,8 +10,6 @@ prepare <- function(arqs, only_x = FALSE) {
 #'
 #' @param arqs object
 #' @param only_x boolean. Is the answers present on file names?
-#'
-#' @export
 prepare.raw <- function(arqs, only_x = TRUE) {
   # works only for single file
   im0 <- NULL
@@ -29,12 +25,10 @@ prepare.raw <- function(arqs, only_x = TRUE) {
 
 #' Prepare captchas
 #'
-#' Prepare answare and features for modeling. Expect '_' as the answer separator.
+#' Prepare answar and features for modeling. Expect '_' as the answer separator.
 #'
 #' @param arqs arqs read
 #' @param only_x boolean. Is the answers present on file names?
-#'
-#' @export
 prepare.captcha <- function(arqs, only_x = FALSE) {
   x <- prepare_x(arqs)
   if (!only_x && length(arqs) > 1) {
@@ -52,7 +46,7 @@ prepare.captcha <- function(arqs, only_x = FALSE) {
     l <- list(y = NULL, x = x)
   }
   l$n <- nrow(x)
-  class(l) <- "prepared"
+  class(l) <- c("captcha", "prepared")
   return(l)
 }
 

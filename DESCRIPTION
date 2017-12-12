@@ -23,10 +23,14 @@ Imports:
   plyr,
   purrr,
   keras,
-  progress
+  progress,
+  decryptrModels
 Remotes:
-  rstudio/keras
-RoxygenNote: 6.0.1
-Suggests: knitr,
-    rmarkdown
+  rstudio/keras,
+  decryptr/decryptrModels
+Suggests:
+  knitr,
+  rmarkdown
 VignetteBuilder: knitr
+RoxygenNote: 6.0.1
+Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace", "collate"))

@@ -2,13 +2,15 @@
 % Please edit documentation in R/read.R
 \name{read_captcha}
 \alias{read_captcha}
-\title{Read captcha image}
+\title{Read captcha file}
 \usage{
 read_captcha(path)
 }
 \arguments{
-\item{path}{path}
+\item{path}{One or more paths to the images of captchas}
 }
 \description{
-Read captcha image
+Given the path to a file, reads that file and converts
+it into a \code{captcha} object that can be used for classification or
+decryption.
 }

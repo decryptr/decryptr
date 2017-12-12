@@ -2,15 +2,15 @@
 % Please edit documentation in R/print.R
 \name{print.captcha}
 \alias{print.captcha}
-\title{Print captcha}
+\title{Plot a captcha}
 \usage{
 \method{print}{captcha}(x, ...)
 }
 \arguments{
-\item{x}{object}
+\item{x}{Captcha object read with \code{\link[=read_captcha]{read_captcha()}}}
 
-\item{...}{other}
+\item{...}{Other arguments passed on to \code{\link[graphics:plot]{graphics::plot()}}}
 }
 \description{
-Print captcha
+Plot a captcha
 }

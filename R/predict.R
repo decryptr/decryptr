@@ -1,31 +1,34 @@
-# predict.tjrs <- function(object, preprocess = preprocess_tjrs, ...) {
-#   m <- captchaTJRS:::m
-#   newdata <- preprocess_tjrs(object, nm = names(m$trainingData))
-#   predict(m, newdata = newdata) %>%
-#     paste(collapse = '')
-# }
-
-#' Predizer os numeros do arquivo
+#' @title Break a captcha
 #'
-#' @param object keras model
-#' @param ... captcha file
+#' @description Given a captcha and a model, returns the text that
+#' is supposed to break the captcha
 #'
+#' @param captcha The path to a captcha or a captcha read with
+#' [read_captcha()]
+#' @param model The name of a model or a model from `decryptrModels`
+#' (see [read_model()])
+#'
+#' @rdname decrypt
 #' @export
-predict.captcha <- function(object, ...) {
-  arq <- list(...)$arq
-  X <- list(...)$newdata$x
-  if (!is.null(arq)) X <- prepare(arq)$x
-  pred_ids <- predict(object$model, X) %>%
-    apply(c(1, 2), which.max) %>%
-    as.vector()
-  paste(object$labs[pred_ids], collapse = "")
+decrypt <- function(captcha, model) {
+  UseMethod("decrypt")
 }
 
-# break_captcha.tjrs <- function(arq, model = NULL) {
-#   a <- read_tjrs(arq)
-#   if (is.null(modelo)) {
-#     model <- decryptr.models::tjrs
-#   }
-#   X <- prepare(arq)
-#   predict(model, newdata = X)
-# }
+#' @rdname decrypt
+#' @export
+decrypt.character <- function(captcha, model) {
+  if (is.character(model)) { model <- read_model(model) }
+  decrypt.captcha(read_captcha(captcha), model)
+}
+
+#' @rdname decrypt
+#' @export
+decrypt.captcha <- function(captcha, model) {
+  if (is.character(model)) { model <- read_model(model) }
+
+  X <- captcha$x
+  pred_ids <- predict(model$model, X) %>%
+    apply(c(1, 2), which.max) %>%
+    as.vector()
+  paste(model$labs[pred_ids], collapse = "")
+}

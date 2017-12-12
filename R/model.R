@@ -1,3 +1,25 @@
+
+#' @title Read a model from `decryptrModels`
+#'
+#' @description Acesses the models saved in `decryptrModels:::models` and
+#' makes them useful for cracking captchas locally
+#'
+#' @param model_name The name of the model (`"rbf"`, `"trt"`, `"tjmg"` or
+#' `"esaj"`)
+#'
+#' @export
+read_model <- function(model_name) {
+  models <- decryptrModels:::models
+  path <- system.file("keras", package = "decryptrModels")
+  files <- dir(path, full.names = TRUE)
+  file_path <- normalizePath(files[grepl(model_name, files)])
+  labs <- models[grepl(model_name, models[["name"]]), ][["labs"]][[1]]
+  model <- keras:::keras$models$load_model(file_path)
+  m <- list(labs = labs, model = model)
+  class(m) <- "model"
+  return(m)
+}
+
 model <- function(prepared, ...) {
   UseMethod("model")
 }

@@ -12,5 +12,5 @@
 \item{only_x}{boolean. Is the answers present on file names?}
 }
 \description{
-Prepare answare and features for modeling. Expect '_' as the answer separator.
+Prepare answar and features for modeling. Expect '_' as the answer separator.
 }

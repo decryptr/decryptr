@@ -34,8 +34,8 @@ One may check whether the url is working or not running
 \item{secure}{use option \code{ssl_verifypeer = TRUE}? Defaults to \code{FALSE}.}
 
 \item{.default}{image extension if not extracted automatically from
-  \code{httr::GET(url, ...)$headers[["content-type"]]}.
-  Normally "jpeg" or "png". Defaults to "jpeg".
+\code{httr::GET(url, ...)$headers[["content-type"]]}.
+Normally "jpeg" or "png". Defaults to "jpeg".
 
 All downloads have a timeout of three seconds to run. If the site you are
 accessing blocks IP after multiple calls, consider creating a loop an using

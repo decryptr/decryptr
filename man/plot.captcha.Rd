@@ -2,17 +2,19 @@
 % Please edit documentation in R/plot.R
 \name{plot.captcha}
 \alias{plot.captcha}
-\title{Plot captcha}
+\title{Plot a captcha}
 \usage{
 \method{plot}{captcha}(x, y, ...)
 }
 \arguments{
-\item{x}{object}
+\item{x}{Captcha object read with \code{\link[=read_captcha]{read_captcha()}}}
 
-\item{y}{-}
+\item{y}{\itemize{
+\item 
+}}
 
-\item{...}{other}
+\item{...}{Other arguments passed on to \code{\link[graphics:plot]{graphics::plot()}}}
 }
 \description{
-Plot captcha
+Plot a captcha
 }

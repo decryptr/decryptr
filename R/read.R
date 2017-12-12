@@ -1,17 +1,23 @@
-#' Read captcha image
+#' @title Read captcha file
 #'
-#' @param path path
+#' @description Given the path to a file, reads that file and converts
+#' it into a `captcha` object that can be used for classification or
+#' decryption.
+#'
+#' @param path One or more paths to the images of captchas
 #'
 #' @export
 read_captcha <- function(path) {
+
   # Get extention
   ext <- tolower(tools::file_ext(basename(path)))
+
   # Return path
   if (all(ext %in% c("jpeg", "jpg", "png"))) {
-    # message("File(s) was located and will be brought to memory when used")
     class(path) <- c("captcha")
-    return(path)
+    return(prepare(path))
   }
+
   # Error
   stop("All files must have extensions 'jpeg', 'jpg' or 'png'.")
 }

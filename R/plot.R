@@ -2,8 +2,6 @@
 #'
 #' @param x object
 #' @param ... other
-#'
-#' @export
 load_image <- function(x, ...) {
   # Get extention
   ext <- tolower(tools::file_ext(basename(x)))
@@ -15,16 +13,16 @@ load_image <- function(x, ...) {
   return(img)
 }
 
-#' Plot captcha
+#' Plot a captcha
 #'
-#' @param x object
+#' @param x Captcha object read with [read_captcha()]
 #' @param y -
-#' @param ... other
+#' @param ... Other arguments passed on to [graphics::plot()]
 #'
 #' @export
 plot.captcha <- function(x, y, ...) {
   img <- load_image(x)
   op <- graphics::par(mar = rep(0, 4))
-  graphics::plot(grDevices::as.raster(img))
+  graphics::plot(grDevices::as.raster(img), ...)
   graphics::par(op)
 }
