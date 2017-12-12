@@ -4,13 +4,17 @@
 \alias{read_captcha}
 \title{Read captcha file}
 \usage{
-read_captcha(path)
+read_captcha(path, ans_in_path = FALSE)
 }
 \arguments{
-\item{path}{One or more paths to the images of captchas}
+\item{path}{Path to a captcha image}
+
+\item{ans_in_path}{Whether or not the answer to the captcha is already
+in the path to the file (separated by and underscore in the filename)}
 }
 \description{
 Given the path to a file, reads that file and converts
 it into a \code{captcha} object that can be used for classification or
-decryption.
+decryption. If \code{ans_in_path = TRUE}, will take the answer for the
+captcha from the filename and get it ready for modeling.
 }

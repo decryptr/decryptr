@@ -2,15 +2,9 @@
 % Please edit documentation in R/predict.R
 \name{decrypt}
 \alias{decrypt}
-\alias{decrypt.character}
-\alias{decrypt.captcha}
 \title{Break a captcha}
 \usage{
 decrypt(captcha, model)
-
-\method{decrypt}{character}(captcha, model)
-
-\method{decrypt}{captcha}(captcha, model)
 }
 \arguments{
 \item{captcha}{The path to a captcha or a captcha read with
