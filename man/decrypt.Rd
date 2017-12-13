@@ -2,18 +2,18 @@
 % Please edit documentation in R/predict.R
 \name{decrypt}
 \alias{decrypt}
-\title{Break a captcha}
+\title{Break captchas}
 \usage{
 decrypt(captcha, model)
 }
 \arguments{
-\item{captcha}{The path to a captcha or a captcha read with
-\code{\link[=read_captcha]{read_captcha()}}}
+\item{captcha}{The paths to one or more captchas or a vector of
+captchas read with \code{\link[=read_captcha]{read_captcha()}}}
 
-\item{model}{The name of a model or a model from \code{decryptrModels}
-(see \code{\link[=load_model]{load_model()}} or \code{\link[=train_model]{train_model()}})}
+\item{model}{Either a model, the path to a model or the name of a
+known model (see \code{\link[=train_model]{train_model()}} and \code{\link[=load_model]{load_model()}})}
 }
 \description{
-Given a captcha and a model, returns the text that
-is supposed to break the captcha.
+Given one or more captchas and a model, returns the
+text that is supposed to break the captchas.
 }

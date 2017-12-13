@@ -1,40 +1,48 @@
 
-#' @title Read captcha file
+#' @title Read captcha files
 #'
-#' @description Given the path to a file, reads that file and converts
-#' it into a `captcha` object that can be used for classification or
+#' @description Given the paths to one or more files, reads and converts
+#' them into a `captcha` vector that can be used for classification or
 #' decryption. If `ans_in_path = TRUE`, will take the answer for the
-#' captcha from the filename and get it ready for modeling.
+#' captchas from their filenames and get them ready for modeling.
+#'
+#' @param path Paths to one or more captcha images
+#' @param ans_in_path Whether or not the answers to the captchas are already
+#' in the paths to the files (separated by and underscore in the filename)
+#'
+#' @return A list of captcha objects
+#'
+#' @export
+read_captcha <- function(path, ans_in_path = FALSE) {
+
+  # Check if files are images
+  ext <- tolower(tools::file_ext(basename(path)))
+  stopifnot(all(ext %in% c("jpeg", "jpg", "png")))
+
+  # Iterate over files
+  purrr::map(path, read_captcha_, ans_in_path)
+}
+
+#' Read a captcha file
 #'
 #' @param path Path to a captcha image
 #' @param ans_in_path Whether or not the answer to the captcha is already
 #' in the path to the file (separated by and underscore in the filename)
 #'
-#' @export
-read_captcha <- function(path, ans_in_path = FALSE ) {
+read_captcha_ <- function(path, ans_in_path) {
 
-  # Get extention
-  ext <- tolower(tools::file_ext(basename(path)))
+  # Load captcha
+  captcha <- grey(load_image(path))
 
-  # Load and build captcha object
-  if (all(ext %in% c("jpeg", "jpg", "png"))) {
+  # Get answer from filename if necessary
+  answer <- if (ans_in_path) { get_answer(path) } else { NULL }
 
-    # Load captcha
-    captcha <- grey(load_image(path))
+  # Create captcha object
+  captcha <- list(y = answer, x = captcha)
+  class(captcha) <- c("captcha")
+  attr(captcha, "file") <- path
 
-    # Get answer from filename if necessary
-    answer <- if (ans_in_path) { get_answer(path) } else { NULL }
-
-    # Create captcha object
-    captcha <- list(y = answer, x = captcha)
-    class(captcha) <- c("captcha", "prepared")
-    attr(captcha, "file") <- path
-
-    return(captcha)
-  }
-
-  # Error
-  stop("All files must have extensions 'jpeg', 'jpg' or 'png'")
+  return(captcha)
 }
 
 #' Read PNG or JPG

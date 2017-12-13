@@ -6,7 +6,7 @@
 #'
 #' @export
 print.captcha <- function(x, ...) {
-  cat(stringr::str_c("A captcha located at '", attr(x, "file"), "'"))
+  print(stringr::str_c("A captcha located at '", attr(x, "file"), "'"))
 }
 
 #' Print information about a model
@@ -16,7 +16,7 @@ print.captcha <- function(x, ...) {
 #'
 #' @export
 print.model <- function(x, ...) {
-  cat(model$model)
+  print(model$model)
 }
 
 #' Plot a captcha

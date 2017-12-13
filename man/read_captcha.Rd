@@ -2,19 +2,22 @@
 % Please edit documentation in R/read.R
 \name{read_captcha}
 \alias{read_captcha}
-\title{Read captcha file}
+\title{Read captcha files}
 \usage{
 read_captcha(path, ans_in_path = FALSE)
 }
 \arguments{
-\item{path}{Path to a captcha image}
+\item{path}{Paths to one or more captcha images}
 
-\item{ans_in_path}{Whether or not the answer to the captcha is already
-in the path to the file (separated by and underscore in the filename)}
+\item{ans_in_path}{Whether or not the answers to the captchas are already
+in the paths to the files (separated by and underscore in the filename)}
+}
+\value{
+A list of captcha objects
 }
 \description{
-Given the path to a file, reads that file and converts
-it into a \code{captcha} object that can be used for classification or
+Given the paths to one or more files, reads and converts
+them into a \code{captcha} vector that can be used for classification or
 decryption. If \code{ans_in_path = TRUE}, will take the answer for the
-captcha from the filename and get it ready for modeling.
+captchas from their filenames and get them ready for modeling.
 }
