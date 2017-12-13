@@ -19,6 +19,7 @@ Imports:
   httr,
   jpeg,
   png,
+  plyr,
   grDevices,
   readr,
   purrr,

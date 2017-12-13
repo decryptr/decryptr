@@ -11,7 +11,7 @@ print.captcha <- function(x, ...) {
 
 #' Print information about a model
 #'
-#' @param x Model object read with [read_model()]
+#' @param x Model object loaded with [load_model()]
 #' @param ... -
 #'
 #' @export

@@ -11,7 +11,7 @@ decrypt(captcha, model)
 \code{\link[=read_captcha]{read_captcha()}}}
 
 \item{model}{The name of a model or a model from \code{decryptrModels}
-(see \code{\link[=read_model]{read_model()}})}
+(see \code{\link[=load_model]{load_model()}} or \code{\link[=train_model]{train_model()}})}
 }
 \description{
 Given a captcha and a model, returns the text that

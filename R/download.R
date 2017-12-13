@@ -1,3 +1,4 @@
+
 #' @title Download captchas from a URL
 #'
 #' @description This is a generic function to download captchas from any

@@ -1,3 +1,4 @@
+
 #' @title Read captcha file
 #'
 #' @description Given the path to a file, reads that file and converts

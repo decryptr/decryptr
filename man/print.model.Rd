@@ -7,7 +7,7 @@
 \method{print}{model}(x, ...)
 }
 \arguments{
-\item{x}{Model object read with \code{\link[=read_model]{read_model()}}}
+\item{x}{Model object loaded with \code{\link[=load_model]{load_model()}}}
 
 \item{...}{\itemize{
 \item 
