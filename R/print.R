@@ -6,6 +6,7 @@
 #'
 #' @export
 print.captcha <- function(x, ...) {
+  if (length(x) == 1) { x <- x[[1]] }
   print(stringr::str_c("A captcha located at '", attr(x, "file"), "'"))
 }
 
@@ -27,6 +28,7 @@ print.model <- function(x, ...) {
 #'
 #' @export
 plot.captcha <- function(x, y, ...) {
+  if (length(x) == 1) { x <- x[[1]] }
   img <- load_image(as.character(attr(x, "file")))
   op <- graphics::par(mar = rep(0, 4))
   graphics::plot(grDevices::as.raster(img), ...)

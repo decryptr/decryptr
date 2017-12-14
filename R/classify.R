@@ -6,7 +6,7 @@
 #' a model with those answers. Answered captchas are saved at `path`
 #' with their answers in the filename separated by an underscore.
 #'
-#' @param captchas A vector with the paths to multiple captchas
+#' @param files A vector with the paths to captcha files
 #' @param answers Either `NULL` (for interactive classification) or
 #' a vector with answers for the captchas
 #' @param path Where to save the renamed (answered) captcha files
@@ -19,7 +19,7 @@
 #' @return A vector with the paths to the newly created files
 #'
 #' @export
-classify <- function(captchas, answers = NULL, path = NULL, rm_old = FALSE, ...) {
+classify <- function(files, answers = NULL, path = NULL, rm_old = FALSE, ...) {
 
   # Create directory if necessary
   if (!is.null(path)) { dir.create(path, FALSE, TRUE) }
@@ -27,18 +27,18 @@ classify <- function(captchas, answers = NULL, path = NULL, rm_old = FALSE, ...)
   if (!is.null(answers)) {
 
     # Stop if answers don't match captchas
-    stopifnot(length(answers) == length(captchas))
+    stopifnot(length(answers) == length(file))
 
     # Iterate over each captcha
     files <- purrr::map2_chr(
-      captchas, answers, classify_,
+      files, answers, classify_,
       path = path, rm_old = rm_old, ...)
 
   } else {
 
     # Prompt for each captcha
     files <- purrr::map_chr(
-      captchas, classify_, ans = NULL,
+      files, classify_, ans = NULL,
       path = path, rm_old = rm_old, ...)
   }
 
@@ -47,7 +47,7 @@ classify <- function(captchas, answers = NULL, path = NULL, rm_old = FALSE, ...)
 
 #' Classify a captcha with its answer
 #'
-#' @param cap The paths to a captcha
+#' @param cap The path to a captcha
 #' @param ans Either `NULL` (for interactive classification) or
 #' a string with the answer for the captcha
 #' @param path Where to save the renamed (answered) captcha file
@@ -60,7 +60,7 @@ classify <- function(captchas, answers = NULL, path = NULL, rm_old = FALSE, ...)
 classify_ <- function(cap, ans, path, rm_old, ...) {
 
   # Read captcha
-  cap <- read_captcha(cap)
+  cap <- read_captcha(cap)[[1]]
 
   # If interactive, prompt for answer
   if (is.null(ans)) {

@@ -2,9 +2,10 @@
 decryptr
 ========
 
-### Description
+Description
+-----------
 
-`decryptr` is an R package to break CAPTCHAs. It is also an extensible tool built in a way that enables anyone to contribute with their own CAPTCHA-breaking code.
+`decryptr` is an R package to break captchas. It is also an extensible tool built in a way that enables anyone to contribute with their own captcha-breaking code.
 
 To install `decryptr`, simply run the code below:
 
@@ -13,84 +14,93 @@ if (!require(devtools)) install.packages("devtools")
 devtools::install_github("decryptr/decryptr")
 ```
 
-It is also recommended to install `decryptrModels` package.
+Basic usage
+-----------
+
+`decryptr` has functions for downloading and breaking captchas from multiple known sources. If you wanted to use this package with, let's say, a TRT (Regional Worker's Court), you could go by the following steps:
 
 ``` r
-devtools::install_github("decryptr/decryptrModels")
+# Download captcha from TRT
+file <- download_captcha("trt", path = "./img")
+
+# Break captcha
+decrypt(file, model = "trt")
 ```
 
-    ## Using GitHub PAT from envvar GITHUB_PAT
+    ## [1] "f66f5b"
 
-    ## Skipping install of 'decryptrModels' from a github remote, the SHA1 (e8429064) has not changed since last install.
-    ##   Use `force = TRUE` to force installation
+Simple, right? The `decrypt()` funcion is this package's workhorse: it is able to take a captcha (either the path to a captcha file or a captcha object read with `read_captcha()`) and break it with a model (either the name of a known model, the path to a model file or a model object created with `train_model()`).
 
-### Basic usage
-
-`decryptr` has functions for downloading and breaking captchas from multiple sources, one of which is TJMG (a court in southern Brazil). Here is how one could break captchas from TJMG:
-
-#### Download and visualise
+If you'd like to visualize a captcha and make sure the decryption is working, you can use the `plot()` funcion to draw out the captcha image:
 
 ``` r
-library(decryptr)
+# Read captcha
+captcha <- read_captcha(file)
 
-# Download captchas
-captcha <- download_tjmg(dest = 'img')
-
-# Draw captcha
-captcha %>% 
-  read_captcha() %>% 
-  plot()
+# Plot captcha
+plot(captcha[[1]])
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/captcha-1.png)
+![](README_files/figure-markdown_github/plot-1.png)
 
-#### Classify manually
+If you want to learn more about the models that already come packaged with `decryptr`, check out `load_model()`'s documentation (and all of these models also have a corresponding `download_captcha()` method so you're always good to go).
+
+Advanced usage
+--------------
+
+If you're willing to create your own custom captcha-breaking models, there are some other functions you might want to know about. `classify()` allows the user to manually answer a list of captchas, while `train_model()` takes a bunch of classified captchas and trains a `keras` model on them.
+
+`classify()` has two modes: static and interactive. If you already know the answers to all captchas, simply turn them into a string vector and pass it onto the `answers` argument; on the other hand, if you're going to manually classify the captchas, `classify()` will plot every captcha and prompt you in the console for their answers. In the snippet below, I use static classification to label a set of 10 captchas:
 
 ``` r
-captcha %>% 
-  read_captcha() %>% 
-  classify()
-# plots the image and opens the console
-#> Answer: 
+# URL of a captcha (for illustrative purposes I'll be using
+# TRT's URL, but you can use whichever URL you want)
+url <- "https://pje.trt4.jus.br/consultaprocessual/seam/resource/captcha"
+
+# Download captcha from URL
+files <- download_captcha(url, n = 10, path = "./img")
+
+# Answers to downloaded captchas
+answers <- c(
+  "ew3h3n", "ew3h3n", "da7522", "da7522", "w8kerh",
+  "mh52v3", "ny248u", "56nwr5", "7tx6dy", "n3fue6")
+
+# Classify captchas (if answers weren't supplied,
+# I'd be promped for interactive classification)
+new_files <- classify(files, answers, path = "./img")
 ```
 
-#### Load model and predict
+Now that we have a set of classified captchas, we can use them to train a captcha-breaking model. `classify()` used our answers to create a new version of each file, one with the answer at the end of the filename separated by an underscore; `read_captcha()` has the `ans_in_path` argument that tells it to look for the answers in the filenames and create the captcha objects accordingly.
+
+With this list of labeled captcha objects, we can call `train_model()` to generate a model. The model gets automatically saved to disk so that we can load it later with `load_model()`.
 
 ``` r
-# Load model (install decryptrModels package first)
-keras_tjmg <- decryptrModels::read_model('tjmg')
-data('tjmg', package = 'decryptr')
-tjmg$model <- keras_tjmg
+# Read answered captchas
+captchas <- read_captcha(new_files, ans_in_path = TRUE)
 
-captcha %>% 
-  read_captcha() %>% 
-  predict(tjmg, arq = .)
+# Use captchas to train a model
+model <- train_model(captchas, verbose = FALSE)
+
+# Use our new model for decryption
+decrypt(file, model = model)
 ```
 
-    ## [1] "84232"
-
-### Performance
-
-Once loaded to memory, Keras models are extremely fast. Also, we don't run any pre-processing on the image.
+    ## [1] "swynh8"
 
 ``` r
-break_captcha <- function() {
-  captcha %>% 
-    read_captcha() %>% 
-    predict(tjmg, arq = .)
-}
+# We could also have loaded the model from disk
+model <- load_model("./model.hdf5")
+```
 
-microbenchmark::microbenchmark(break_captcha())
+Performance
+-----------
+
+Once loaded to memory, `keras` models run very quickly Also, we don't run any pre-processing on the image, so decryption is blazing fast.
+
+``` r
+microbenchmark::microbenchmark(decrypt = decrypt(captcha, model))
 ```
 
     ## Unit: milliseconds
-    ##             expr      min       lq     mean  median       uq      max
-    ##  break_captcha() 12.54039 13.39467 16.42615 14.0669 16.00585 172.3118
-    ##  neval
-    ##    100
-
-### Extensibility
-
-Since `decryptr` is built on top of S3 methods, anyone can extend its functionalities with custom packages. Simply create a `download_<ext>` function, a `read_<ext>` function, and a `predict.<ext>` function and you're good to go.
-
-More information about extensibility can be found on `decryptr`'s documentation.
+    ##     expr      min       lq     mean   median       uq      max neval
+    ##  decrypt 6.400934 6.671345 8.151165 6.998755 7.734719 96.69713   100

@@ -34,7 +34,7 @@ download_captcha <- function(url, n = 1, path = ".", secure = FALSE, ext = ".jpe
   pb <- progress::progress_bar$new(total = n)
   for (i in 1:n) {
     pb$tick()
-    out <- c(out, safe_download_(url, path, secure, ext))
+    out <- c(out, download_captcha_(url, path, secure, ext))
   }
 
   return(out)
@@ -56,7 +56,7 @@ download_captcha_ <- function(url, path, secure, ext) {
     "tjrs" = "http://www.tjrs.jus.br/site_php/consulta/human_check/humancheck_showcode.php",
     "tjmg" = "http://www4.tjmg.jus.br/juridico/sf/captcha.svl",
     "tjrj" = "http://www4.tjrj.jus.br/consultaProcessoWebV2/captcha",
-    "trt"  = "https://pje.trt4.jus.br/consultaprocessual/seam/resource/captcha",
+    "trt"  = "https://consultapje.trt1.jus.br/consultaprocessual/seam/resource/captcha",
     "rbf"  = "http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/captcha/gerarCaptcha.asp",
     url)
 

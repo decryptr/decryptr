@@ -4,84 +4,129 @@ output: github_document
 
 # decryptr
 
-### Description
+## Description
 
-`decryptr` is an R package to break CAPTCHAs. It is also an extensible tool
-built in a way that enables anyone to contribute with their own CAPTCHA-breaking
+`decryptr` is an R package to break captchas. It is also an extensible tool
+built in a way that enables anyone to contribute with their own captcha-breaking
 code.
 
 To install `decryptr`, simply run the code below:
 
-```{r eval=FALSE}
+```{r, eval = FALSE}
 if (!require(devtools)) install.packages("devtools")
 devtools::install_github("decryptr/decryptr")
 ```
 
-It is also recommended to install `decryptrModels` package.
-
-```{r}
-devtools::install_github("decryptr/decryptrModels")
-```
-
-### Basic usage
+## Basic usage
 
 `decryptr` has functions for downloading and breaking captchas from multiple
-sources, one of which is TJMG (a court in southern Brazil). Here is how one
-could break captchas from TJMG:
+known sources. If you wanted to use this package with, let's say, a TRT (Regional
+Worker's Court), you could go by the following steps:
 
-#### Download and visualise
-
-```{r captcha, warning=FALSE, message=FALSE}
-library(decryptr)
-
-# Download captchas
-captcha <- download_tjmg(dest = 'img')
-
-# Draw captcha
-captcha %>% 
-  read_captcha() %>% 
-  plot()
+```{r lib, include = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE)
+purrr::walk(list.files("./img", full.names = TRUE), file.remove)
+devtools::load_all(); library(magrittr)
 ```
 
-#### Classify manually 
 
-```{r eval=FALSE}
-captcha %>% 
-  read_captcha() %>% 
-  classify()
-# plots the image and opens the console
-#> Answer: 
+```{r basic}
+# Download captcha from TRT
+file <- download_captcha("trt", path = "./img")
+
+# Break captcha
+decrypt(file, model = "trt")
 ```
 
-#### Load model and predict
+Simple, right? The `decrypt()` funcion is this package's workhorse: it is able to
+take a captcha (either the path to a captcha file or a captcha object read with
+`read_captcha()`) and break it with a model (either the name of a known model,
+the path to a model file or a model object created with `train_model()`).
 
-```{r}
-# Load model (install decryptrModels package first)
-keras_tjmg <- decryptrModels::read_model('tjmg')
-data('tjmg', package = 'decryptr')
-tjmg$model <- keras_tjmg
+If you'd like to visualize a captcha and make sure the decryption is working, you
+can use the `plot()` funcion to draw out the captcha image:
 
-captcha %>% 
-  read_captcha() %>% 
-  predict(tjmg, arq = .)
+```{r plot}
+# Read captcha
+captcha <- read_captcha(file)
+
+# Plot captcha
+plot(captcha[[1]])
 ```
 
-### Performance
+If you want to learn more about the models that already come packaged with `decryptr`,
+check out `load_model()`'s documentation (and all of these models also have a corresponding
+`download_captcha()` method so you're always good to go).
 
-Once loaded to memory, Keras models are extremely fast. Also, we don't run any pre-processing on the image.
+## Advanced usage
 
-```{r}
-break_captcha <- function() {
-  captcha %>% 
-    read_captcha() %>% 
-    predict(tjmg, arq = .)
-}
+If you're willing to create your own custom captcha-breaking models, there are some
+other functions you might want to know about. `classify()` allows the user to manually
+answer a list of captchas, while `train_model()` takes a bunch of classified captchas and
+trains a `keras` model on them.
 
-microbenchmark::microbenchmark(break_captcha())
+`classify()` has two modes: static and interactive. If you already know the answers to all
+captchas, simply turn them into a string vector and pass it onto the `answers` argument;
+on the other hand, if you're going to manually classify the captchas, `classify()` will
+plot every captcha and prompt you in the console for their answers. In the snippet below,
+I use static classification to label a set of 10 captchas:
+
+```{r classification, eval = FALSE}
+# URL of a captcha (for illustrative purposes I'll be using
+# TRT's URL, but you can use whichever URL you want)
+url <- "https://pje.trt4.jus.br/consultaprocessual/seam/resource/captcha"
+
+# Download captcha from URL
+files <- download_captcha(url, n = 10, path = "./img")
+
+# Answers to downloaded captchas
+answers <- c(
+  "ew3h3n", "ew3h3n", "da7522", "da7522", "w8kerh",
+  "mh52v3", "ny248u", "56nwr5", "7tx6dy", "n3fue6")
+
+# Classify captchas (if answers weren't supplied,
+# I'd be promped for interactive classification)
+new_files <- classify(files, answers, path = "./img")
 ```
 
-### Extensibility
+```{r classification_, include = FALSE}
+files <- download_captcha("trt", n = 10, path = "./img")
+new_files <- classify(files, path = "./img", model = load_model("trt"))
+```
 
-Since `decryptr` is built on top of S3 methods, anyone can extend its functionalities with custom packages. Simply create a `download_<ext>` function, a `read_<ext>` function, and a `predict.<ext>` function and you're good to go.
+Now that we have a set of classified captchas, we can use them to train a
+captcha-breaking model. `classify()` used our answers to create a new version
+of each file, one with the answer at the end of the filename separated by an
+underscore; `read_captcha()` has the `ans_in_path` argument that tells it to
+look for the answers in the filenames and create the captcha objects accordingly.
 
-More information about extensibility can be found on `decryptr`'s documentation.
+With this list of labeled captcha objects, we can call `train_model()` to generate
+a model. The model gets automatically saved to disk so that we can load it later
+with `load_model()`.
+
+```{r modeling}
+# Read answered captchas
+captchas <- read_captcha(new_files, ans_in_path = TRUE)
+
+# Use captchas to train a model
+model <- train_model(captchas, verbose = FALSE)
+
+# Use our new model for decryption
+decrypt(file, model = model)
+
+# We could also have loaded the model from disk
+model <- load_model("./model.hdf5")
+```
+
+```{r rm, include = FALSE}
+file.remove("./model.hdf5")
+```
+
+## Performance
+
+Once loaded to memory, `keras` models run very quickly Also, we don't run any
+pre-processing on the image, so decryption is blazing fast.
+
+```{r benchmark}
+microbenchmark::microbenchmark(decrypt = decrypt(captcha, model))
+```
