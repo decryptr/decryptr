@@ -12,9 +12,6 @@
 #' @export
 decrypt <- function(captcha, model) {
 
-  # Handle vectorization
-  if (class(captcha) == "captcha") { captcha <- list(captcha) }
-
   # Read captcha and model if necessary
   if (is.character(model)) { model <- load_model(model) }
   if (is.character(captcha)) { captcha <- read_captcha(captcha) }

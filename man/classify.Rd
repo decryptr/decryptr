@@ -4,10 +4,10 @@
 \alias{classify}
 \title{Classify captchas with their answers}
 \usage{
-classify(captchas, answers = NULL, path = NULL, rm_old = FALSE, ...)
+classify(files, answers = NULL, path = NULL, rm_old = FALSE, ...)
 }
 \arguments{
-\item{captchas}{A vector with the paths to multiple captchas}
+\item{files}{A vector with the paths to captcha files}
 
 \item{answers}{Either \code{NULL} (for interactive classification) or
 a vector with answers for the captchas}

@@ -60,7 +60,7 @@ classify <- function(files, answers = NULL, path = NULL, rm_old = FALSE, ...) {
 classify_ <- function(cap, ans, path, rm_old, ...) {
 
   # Read captcha
-  cap <- read_captcha(cap)[[1]]
+  cap_ <- read_captcha(cap)[[1]]
 
   # If interactive, prompt for answer
   if (is.null(ans)) {
@@ -69,13 +69,13 @@ classify_ <- function(cap, ans, path, rm_old, ...) {
     if (!is.null(list(...)$model)) {
       ans <- decrypt(cap, list(...)$model)
     } else {
-      graphics::plot(cap)
+      graphics::plot(cap_)
       ans <- readline("Answer: ")
     }
   }
 
   # Get information about where the file should be saved
-  file <- attr(cap, "file")
+  file <- attr(cap_, "file")
   name <- tools::file_path_sans_ext(basename(file))
   ext <- tools::file_ext(basename(file))
   path <- ifelse(is.null(path), dirname(file), normalizePath(path))

@@ -51,7 +51,7 @@ can use the `plot()` funcion to draw out the captcha image:
 captcha <- read_captcha(file)
 
 # Plot captcha
-plot(captcha[[1]])
+plot(captcha)
 ```
 
 If you want to learn more about the models that already come packaged with `decryptr`,

@@ -7,7 +7,7 @@
 classify_(cap, ans, path, rm_old, ...)
 }
 \arguments{
-\item{cap}{The paths to a captcha}
+\item{cap}{The path to a captcha}
 
 \item{ans}{Either \code{NULL} (for interactive classification) or
 a string with the answer for the captcha}

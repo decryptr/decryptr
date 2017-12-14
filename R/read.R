@@ -20,7 +20,10 @@ read_captcha <- function(path, ans_in_path = FALSE) {
   stopifnot(all(ext %in% c("jpeg", "jpg", "png")))
 
   # Iterate over files
-  purrr::map(path, read_captcha_, ans_in_path)
+  out <- purrr::map(path, read_captcha_, ans_in_path)
+  class(out) <- c("captcha")
+
+  return(out)
 }
 
 #' Read a captcha file
@@ -39,7 +42,6 @@ read_captcha_ <- function(path, ans_in_path) {
 
   # Create captcha object
   captcha <- list(y = answer, x = captcha)
-  class(captcha) <- c("captcha")
   attr(captcha, "file") <- path
 
   return(captcha)

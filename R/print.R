@@ -6,8 +6,14 @@
 #'
 #' @export
 print.captcha <- function(x, ...) {
-  if (length(x) == 1) { x <- x[[1]] }
-  print(stringr::str_c("A captcha located at '", attr(x, "file"), "'"))
+  if (length(x) == 1) {
+    cat("A captcha located at:\n", as.character(attr(x[[1]], "file")), sep = "")
+  } else {
+    cat("A list of ", length(x), " captchas located at:\n")
+    for (i in seq_along(x)) {
+      cat(i, ". ", as.character(attr(x[[i]], "file")), "\n", sep = "")
+    }
+  }
 }
 
 #' Print information about a model

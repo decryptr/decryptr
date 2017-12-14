@@ -27,7 +27,7 @@ file <- download_captcha("trt", path = "./img")
 decrypt(file, model = "trt")
 ```
 
-    ## [1] "f66f5b"
+    ## [1] "54x72n"
 
 Simple, right? The `decrypt()` funcion is this package's workhorse: it is able to take a captcha (either the path to a captcha file or a captcha object read with `read_captcha()`) and break it with a model (either the name of a known model, the path to a model file or a model object created with `train_model()`).
 
@@ -38,7 +38,7 @@ If you'd like to visualize a captcha and make sure the decryption is working, yo
 captcha <- read_captcha(file)
 
 # Plot captcha
-plot(captcha[[1]])
+plot(captcha)
 ```
 
 ![](README_files/figure-markdown_github/plot-1.png)
@@ -85,7 +85,7 @@ model <- train_model(captchas, verbose = FALSE)
 decrypt(file, model = model)
 ```
 
-    ## [1] "swynh8"
+    ## [1] "77j82y"
 
 ``` r
 # We could also have loaded the model from disk
@@ -102,5 +102,5 @@ microbenchmark::microbenchmark(decrypt = decrypt(captcha, model))
 ```
 
     ## Unit: milliseconds
-    ##     expr      min       lq     mean   median       uq      max neval
-    ##  decrypt 6.400934 6.671345 8.151165 6.998755 7.734719 96.69713   100
+    ##     expr      min       lq     mean   median       uq     max neval
+    ##  decrypt 7.144657 7.475772 8.767433 7.746288 8.201848 92.0504   100
