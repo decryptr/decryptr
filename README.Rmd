@@ -46,7 +46,7 @@ the path to a model file or a model object created with `train_model()`).
 If you'd like to visualize a captcha and make sure the decryption is working, you
 can use the `plot()` funcion to draw out the captcha image:
 
-```{r plot}
+```{r plot, fig.width = 3, fig.height = 1}
 # Read captcha
 captcha <- read_captcha(file)
 
