@@ -2,7 +2,7 @@
 #' @title Read captcha files
 #'
 #' @description Given the paths to one or more files, reads and converts
-#' them into a `captcha` vector that can be used for classification or
+#' them into a `captcha` list that can be used for classification or
 #' decryption. If `ans_in_path = TRUE`, will take the answer for the
 #' captchas from their filenames and get them ready for modeling.
 #'

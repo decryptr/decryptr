@@ -7,7 +7,7 @@
 decrypt(captcha, model)
 }
 \arguments{
-\item{captcha}{The paths to one or more captchas or a vector of
+\item{captcha}{The paths to one or more captchas or a list of
 captchas read with \code{\link[=read_captcha]{read_captcha()}}}
 
 \item{model}{Either a model, the path to a model or the name of a

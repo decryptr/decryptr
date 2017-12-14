@@ -4,7 +4,7 @@
 #' @description Given one or more captchas and a model, returns the
 #' text that is supposed to break the captchas.
 #'
-#' @param captcha The paths to one or more captchas or a vector of
+#' @param captcha The paths to one or more captchas or a list of
 #' captchas read with [read_captcha()]
 #' @param model Either a model, the path to a model or the name of a
 #' known model (see [train_model()] and [load_model()])
@@ -38,4 +38,21 @@ decrypt_ <- function(captcha, model) {
 
   # Output answer
   stringr::str_c(model$labs[pred_ids], collapse = "")
+}
+
+#' @title Break captchas
+#'
+#' @description This is an alternative to [decrypt()] that can be
+#' used in a more convenient way if you're used to modeling. So,
+#' if you're a hardcore #rstats fan and your fingers start itching
+#' if you don't run [stats::predict()] every 2 lines, this wrapper
+#' is for you.
+#'
+#' @param object A model for which prediction is desired
+#' @param newdata A list of `captcha` objects read with [read_captcha()]
+#' @param ... -
+#'
+#' @export
+predict.captcha <- function(object, newdata = NULL, ...) {
+  decrypt(newdata, object)
 }
