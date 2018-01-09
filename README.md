@@ -11,7 +11,7 @@ To install `decryptr`, simply run the code below:
 
 ``` r
 if (!require(devtools)) install.packages("devtools")
-devtools::install_github("decryptr/decryptr")
+devtools::install_github("ctlente/decryptr")
 ```
 
 Basic usage
