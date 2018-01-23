@@ -2,15 +2,31 @@
 % Please edit documentation in R/classify.R
 \name{classify}
 \alias{classify}
-\title{Classify captcha}
+\title{Classify captchas with their answers}
 \usage{
-classify(captcha, ...)
+classify(files, answers = NULL, path = NULL, rm_old = FALSE, ...)
 }
 \arguments{
-\item{captcha}{object}
+\item{files}{A vector with the paths to captcha files}
 
-\item{...}{other}
+\item{answers}{Either \code{NULL} (for interactive classification) or
+a vector with answers for the captchas}
+
+\item{path}{Where to save the renamed (answered) captcha files
+(if \code{NULL}, will save each file on the same folder as its unanswered
+counterpart)}
+
+\item{rm_old}{Whether or not to delete unanswered captchas after
+copying and renaming them}
+
+\item{...}{Other arguments passed on to \code{\link[=read_captcha]{read_captcha()}}}
+}
+\value{
+A vector with the paths to the newly created files
 }
 \description{
-Classify captcha
+Given one or more captcha files, this function
+prompts you to break them mannually so that later you can train
+a model with those answers. Answered captchas are saved at \code{path}
+with their answers in the filename separated by an underscore.
 }

@@ -2,15 +2,23 @@
 % Please edit documentation in R/predict.R
 \name{predict.captcha}
 \alias{predict.captcha}
-\title{Predizer os numeros do arquivo}
+\title{Break captchas}
 \usage{
-\method{predict}{captcha}(object, ...)
+\method{predict}{captcha}(object, newdata = NULL, ...)
 }
 \arguments{
-\item{object}{keras model}
+\item{object}{A model for which prediction is desired}
 
-\item{...}{captcha file}
+\item{newdata}{A list of \code{captcha} objects read with \code{\link[=read_captcha]{read_captcha()}}}
+
+\item{...}{\itemize{
+\item 
+}}
 }
 \description{
-Predizer os numeros do arquivo
+This is an alternative to \code{\link[=decrypt]{decrypt()}} that can be
+used in a more convenient way if you're used to modeling. So,
+if you're a hardcore #rstats fan and your fingers start itching
+if you don't run \code{\link[stats:predict]{stats::predict()}} every 2 lines, this wrapper
+is for you.
 }

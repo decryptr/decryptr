@@ -2,15 +2,17 @@
 % Please edit documentation in R/print.R
 \name{print.captcha}
 \alias{print.captcha}
-\title{Print captcha}
+\title{Print information about a captcha}
 \usage{
 \method{print}{captcha}(x, ...)
 }
 \arguments{
-\item{x}{object}
+\item{x}{Captcha object read with \code{\link[=read_captcha]{read_captcha()}}}
 
-\item{...}{other}
+\item{...}{\itemize{
+\item 
+}}
 }
 \description{
-Print captcha
+Print information about a captcha
 }
