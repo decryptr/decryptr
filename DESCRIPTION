@@ -1,6 +1,6 @@
 Package: decryptr
 Title: An extensible API for breaking captchas
-Version: 0.2.0.9000
+Version: 0.2.0
 Authors@R: c(person("Julio", "Trecenti", email = "j@jtrecenti.com", role = c("aut")),
   person("Caio", "Lente", email = "ctlente@gmail.com", role = c("aut", "cre")),
   person("Milene", "Farhat", email = "milene.farhat@gmail.com", role = c("aut")),
