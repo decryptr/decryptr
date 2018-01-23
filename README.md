@@ -2,16 +2,18 @@
 decryptr
 ========
 
-Description
------------
+**FOR MORE INFO ABOUT THE OLD API (DECRYPTR LEGACY), SEE [V0.1](https://github.com/decryptr/decryptr/releases/tag/v0.1)**
 
 `decryptr` is an R package to break captchas. It is also an extensible tool built in a way that enables anyone to contribute with their own captcha-breaking code.
+
+Installation
+------------
 
 To install `decryptr`, simply run the code below:
 
 ``` r
 if (!require(devtools)) install.packages("devtools")
-devtools::install_github("ctlente/decryptr")
+devtools::install_github("decryptr/decryptr")
 ```
 
 Basic usage
@@ -27,7 +29,7 @@ file <- download_captcha("trt", path = "./img")
 decrypt(file, model = "trt")
 ```
 
-    ## [1] "35fst3"
+    ## [1] "9962dm"
 
 Simple, right? The `decrypt()` funcion is this package's workhorse: it is able to take a captcha (either the path to a captcha file or a captcha object read with `read_captcha()`) and break it with a model (either the name of a known model, the path to a model file or a model object created with `train_model()`).
 
@@ -85,7 +87,7 @@ model <- train_model(captchas, verbose = FALSE)
 decrypt(file, model = model)
 ```
 
-    ## [1] "u48he5"
+    ## [1] "k7b5jb"
 
 ``` r
 # We could also have loaded the model from disk
@@ -102,5 +104,5 @@ microbenchmark::microbenchmark(decrypt = decrypt(captcha, model))
 ```
 
     ## Unit: milliseconds
-    ##     expr      min       lq     mean   median       uq      max neval
-    ##  decrypt 7.222762 7.715705 9.316674 8.143417 8.877392 96.65516   100
+    ##     expr      min       lq    mean   median       uq      max neval
+    ##  decrypt 6.419015 6.529818 7.67595 6.594364 6.953313 87.74857   100
