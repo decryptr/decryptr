@@ -8,7 +8,7 @@ download_captcha_(url, path, secure, ext)
 }
 \arguments{
 \item{url}{URL from which to download captcha or the name of a known source
-(\code{"tjrs"}, \code{"tjmg"}, \code{"tjrj"}, \code{"trt"} or \code{"rbf"})}
+(\code{"tjrs"}, \code{"tjmg"}, \code{"tjrj"}, \code{"trt"} or \code{"rfb"})}
 
 \item{path}{Folder where to save downloaded captcha}
 

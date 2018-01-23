@@ -8,7 +8,7 @@ download_captcha(url, n = 1, path = ".", secure = FALSE, ext = ".jpeg")
 }
 \arguments{
 \item{url}{URL from which to download captcha or the name of a known source
-(\code{"tjrs"}, \code{"tjmg"}, \code{"tjrj"}, \code{"trt"} or \code{"rbf"})}
+(\code{"tjrs"}, \code{"tjmg"}, \code{"tjrj"}, \code{"trt"} or \code{"rfb"})}
 
 \item{n}{Total number of captchas to download}
 

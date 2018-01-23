@@ -11,7 +11,7 @@
 #' creating a loop an using [base::Sys.sleep()] to wait for new calls.
 #'
 #' @param url URL from which to download captcha or the name of a known source
-#' (`"tjrs"`, `"tjmg"`, `"tjrj"`, `"trt"` or `"rbf"`)
+#' (`"tjrs"`, `"tjmg"`, `"tjrj"`, `"trt"` or `"rfb"`)
 #' @param n Total number of captchas to download
 #' @param path Folder where to save downloaded captchas
 #' @param secure Whether or not to use `ssl_verifypeer = TRUE` (see
@@ -43,7 +43,7 @@ download_captcha <- function(url, n = 1, path = ".", secure = FALSE, ext = ".jpe
 #' Download captcha from a URL
 #'
 #' @param url URL from which to download captcha or the name of a known source
-#' (`"tjrs"`, `"tjmg"`, `"tjrj"`, `"trt"` or `"rbf"`)
+#' (`"tjrs"`, `"tjmg"`, `"tjrj"`, `"trt"` or `"rfb"`)
 #' @param path Folder where to save downloaded captcha
 #' @param secure Whether or not to use `ssl_verifypeer = TRUE` (see
 #' [httr::GET()])
@@ -57,7 +57,7 @@ download_captcha_ <- function(url, path, secure, ext) {
     "tjmg" = "http://www4.tjmg.jus.br/juridico/sf/captcha.svl",
     "tjrj" = "http://www4.tjrj.jus.br/consultaProcessoWebV2/captcha",
     "trt"  = "https://consultapje.trt1.jus.br/consultaprocessual/seam/resource/captcha",
-    "rbf"  = "http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/captcha/gerarCaptcha.asp",
+    "rfb"  = "http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/captcha/gerarCaptcha.asp",
     url)
 
   # Send get request
