@@ -69,7 +69,7 @@ classify_ <- function(cap, ans, path, rm_old, ...) {
     if (!is.null(list(...)$model)) {
       ans <- decrypt(cap, list(...)$model)
     } else {
-      graphics::plot(cap_)
+      plot.captcha(cap_)
       ans <- readline("Answer: ")
     }
   }
