@@ -4,3 +4,5 @@
 ^README-.*\.png$
 ^img$
 ^README_files$
+^\.travis\.yml$
+^appveyor\.yml$

@@ -4,13 +4,17 @@ output: github_document
 
 # decryptr
 
+[![Travis-CI Build Status](https://travis-ci.org/decryptr/decryptr.svg?branch=master)](https://travis-ci.org/decryptr/decryptr)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/decryptr/decryptr?branch=master&svg=true)](https://ci.appveyor.com/project/decryptr/decryptr)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/decryptr)](http://cran.r-project.org/package=decryptr)
+
+## Overview
+
 **FOR MORE INFO ABOUT THE OLD API (DECRYPTR LEGACY), SEE [V0.1](https://github.com/decryptr/decryptr/releases/tag/v0.1)**
 
 `decryptr` is an R package to break captchas. It is also an extensible tool
 built in a way that enables anyone to contribute with their own captcha-breaking
 code.
-
-## Installation
 
 To install `decryptr`, simply run the code below:
 
