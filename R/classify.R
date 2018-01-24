@@ -27,7 +27,7 @@ classify <- function(files, answers = NULL, path = NULL, rm_old = FALSE, ...) {
   if (!is.null(answers)) {
 
     # Stop if answers don't match captchas
-    stopifnot(length(answers) == length(file))
+    stopifnot(length(answers) == length(files))
 
     # Iterate over each captcha
     files <- purrr::map2_chr(
