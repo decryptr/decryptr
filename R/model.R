@@ -22,7 +22,7 @@ load_model <- function(model, labs = c(0:9, base::letters)) {
     files <- dir(path, full.names = TRUE)
     file_path <- normalizePath(files[grepl(model, files)])
     labs <- models[grepl(model, models[["name"]]), ][["labs"]][[1]]
-    model <- keras:::keras$models$load_model(file_path)
+    model <- keras::load_model_hdf5(file_path)
   }
 
   # Create model object
