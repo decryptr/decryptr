@@ -17,7 +17,7 @@ load_model <- function(model, labs = c(0:9, base::letters)) {
   if (!(model %in% c("rfb", "trt", "tjmg", "esaj"))) {
     model <- keras::load_model_hdf5(model)
   } else {
-    models <- decryptrModels:::models
+    models <- decryptrModels::models
     path <- system.file("keras", package = "decryptrModels")
     files <- dir(path, full.names = TRUE)
     file_path <- normalizePath(files[grepl(model, files)])
