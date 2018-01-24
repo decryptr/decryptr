@@ -1,11 +1,12 @@
 Package: decryptr
 Title: An extensible API for breaking captchas
 Version: 0.2.0.9000
-Authors@R: c(person("Julio", "Trecenti", email = "j@jtrecenti.com", role = c("aut")),
+Authors@R: c(person("Julio", "Trecenti", role = c("aut")),
   person("Caio", "Lente", email = "ctlente@gmail.com", role = c("aut", "cre")),
-  person("Milene", "Farhat", email = "milene.farhat@gmail.com", role = c("aut")),
-  person("Beatriz", "Vianna", email = "bia.vianna@gmail.com", role = c("aut")),
-  person("Evelin", "Angelica", email = "evelinangelica@gmail.com", role = c("aut")))
+  person("Daniel", "Falbel", role = c("aut")),
+  person("Milene", "Farhat", role = c("aut")),
+  person("Beatriz", "Vianna", role = c("aut")),
+  person("Evelin", "Angelica", role = c("aut")))
 Description: This tool helps you download, visualize and break captchas.
   It is built as an extensible API so anyone can contribute with their
   own captcha-breaking code.
@@ -27,7 +28,6 @@ Imports:
   progress,
   decryptrModels
 Remotes:
-  rstudio/keras,
   decryptr/decryptrModels
 Suggests:
   knitr,
