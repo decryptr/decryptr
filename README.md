@@ -2,12 +2,14 @@
 decryptr
 ========
 
+[![Travis-CI Build Status](https://travis-ci.org/decryptr/decryptr.svg?branch=master)](https://travis-ci.org/decryptr/decryptr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/decryptr/decryptr?branch=master&svg=true)](https://ci.appveyor.com/project/decryptr/decryptr) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/decryptr)](http://cran.r-project.org/package=decryptr)
+
+Overview
+--------
+
 **FOR MORE INFO ABOUT THE OLD API (DECRYPTR LEGACY), SEE [V0.1](https://github.com/decryptr/decryptr/releases/tag/v0.1)**
 
 `decryptr` is an R package to break captchas. It is also an extensible tool built in a way that enables anyone to contribute with their own captcha-breaking code.
-
-Installation
-------------
 
 To install `decryptr`, simply run the code below:
 
@@ -29,7 +31,7 @@ file <- download_captcha("trt", path = "./img")
 decrypt(file, model = "trt")
 ```
 
-    ## [1] "k36usu"
+    ## [1] "vnbuxt"
 
 Simple, right? The `decrypt()` funcion is this package's workhorse: it is able to take a captcha (either the path to a captcha file or a captcha object read with `read_captcha()`) and break it with a model (either the name of a known model, the path to a model file or a model object created with `train_model()`).
 
@@ -87,7 +89,7 @@ model <- train_model(captchas, verbose = FALSE)
 decrypt(file, model = model)
 ```
 
-    ## [1] "ys3kr4"
+    ## [1] "6ymw7t"
 
 ``` r
 # We could also have loaded the model from disk
@@ -104,5 +106,5 @@ microbenchmark::microbenchmark(decrypt = decrypt(captcha, model))
 ```
 
     ## Unit: milliseconds
-    ##     expr      min       lq    mean   median       uq      max neval
-    ##  decrypt 6.739689 7.132197 8.46989 7.375482 7.747622 97.18051   100
+    ##     expr      min      lq     mean   median      uq      max neval
+    ##  decrypt 7.120499 8.44019 11.18512 9.882334 11.2121 95.81513   100
