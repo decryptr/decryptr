@@ -179,7 +179,11 @@ join_answers <- function(ys) {
     purrr::map(~attr(.x, "dimnames")[[2]]) %>%
     purrr::flatten_chr() %>%
     unique() %>% sort()
-  n <- nrow(ys[[1]])
+
+  # Get length of answers
+  n <- purrr::map_dbl(ys, nrow)
+  if (!all(n == n[1])) { stop("Answers to all captchas must have the same length") }
+  else { n <- n[1] }
 
   # Apply resizing to all list of answers
   ys <- purrr::map(ys, resize_answer, letters, n)
