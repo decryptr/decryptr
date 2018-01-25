@@ -4,7 +4,8 @@
 \alias{download_captcha}
 \title{Download captchas from a URL}
 \usage{
-download_captcha(url, n = 1, path = ".", secure = FALSE, ext = ".jpeg")
+download_captcha(url, n = 1, path = ".", secure = FALSE, timeout = 3,
+  ext = ".jpeg")
 }
 \arguments{
 \item{url}{URL from which to download captcha or the name of a known source
@@ -16,6 +17,8 @@ download_captcha(url, n = 1, path = ".", secure = FALSE, ext = ".jpeg")
 
 \item{secure}{Whether or not to use \code{ssl_verifypeer = TRUE} (see
 \code{\link[httr:GET]{httr::GET()}})}
+
+\item{timeout}{Timeout for captcha download (passed on to \code{\link[httr:timeout]{httr::timeout()}})}
 
 \item{ext}{Default image extension if not able to extract it automatically}
 }

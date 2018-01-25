@@ -17,11 +17,12 @@
 #' @param secure Whether or not to use `ssl_verifypeer = TRUE` (see
 #' [httr::GET()])
 #' @param ext Default image extension if not able to extract it automatically
+#' @param timeout Timeout for captcha download (passed on to [httr::timeout()])
 #'
 #' @return A vector with the paths to the downloaded files
 #'
 #' @export
-download_captcha <- function(url, n = 1, path = ".", secure = FALSE, ext = ".jpeg") {
+download_captcha <- function(url, n = 1, path = ".", secure = FALSE, timeout = 3, ext = ".jpeg") {
 
   # Create directory if necessary
   dir.create(path, FALSE, TRUE)
@@ -34,7 +35,7 @@ download_captcha <- function(url, n = 1, path = ".", secure = FALSE, ext = ".jpe
   pb <- progress::progress_bar$new(total = n)
   for (i in 1:n) {
     pb$tick()
-    out <- c(out, download_captcha_(url, path, secure, ext))
+    out <- c(out, download_captcha_(url, path, secure, ext, timeout))
   }
 
   return(out)
@@ -48,8 +49,9 @@ download_captcha <- function(url, n = 1, path = ".", secure = FALSE, ext = ".jpe
 #' @param secure Whether or not to use `ssl_verifypeer = TRUE` (see
 #' [httr::GET()])
 #' @param ext Default image extension if not able to extract it automatically
+#' @param timeout Timeout for captcha download (passed on to [httr::timeout()])
 #'
-download_captcha_ <- function(url, path, secure, ext) {
+download_captcha_ <- function(url, path, secure, ext, timeout) {
 
   # Replace known captchas
   url <- switch(url,
@@ -65,7 +67,7 @@ download_captcha_ <- function(url, path, secure, ext) {
   r <- httr::GET(url,
     httr::user_agent("R-decryptr"),
     httr::config(ssl_verifypeer = secure),
-    httr::timeout(3))
+    httr::timeout(timeout))
 
   # Get file extension
   ct <- r$headers[["content-type"]]

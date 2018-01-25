@@ -8,7 +8,7 @@ test_that("downloading works", {
   # Download 3 captchas from each source
   files <- c()
   for (url in c("tjrs", "tjmg", "tjrj", "trt", "rfb")) {
-     files <- append(files, download_captcha(url, n = 3, path = path))
+     files <- append(files, download_captcha(url, n = 3, path = path, timeout = 10))
   }
 
   # Expectations
