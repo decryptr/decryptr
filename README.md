@@ -2,7 +2,7 @@
 decryptr
 ========
 
-[![Travis-CI Build Status](https://travis-ci.org/decryptr/decryptr.svg?branch=master)](https://travis-ci.org/decryptr/decryptr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/decryptr/decryptr?branch=master&svg=true)](https://ci.appveyor.com/project/decryptr/decryptr) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/decryptr)](http://cran.r-project.org/package=decryptr)
+[![Travis-CI Build Status](https://travis-ci.org/decryptr/decryptr.svg?branch=master)](https://travis-ci.org/decryptr/decryptr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/decryptr/decryptr?branch=master&svg=true)](https://ci.appveyor.com/project/decryptr/decryptr) [![Coverage Status](https://img.shields.io/codecov/c/github/decryptr/decryptr/master.svg)](https://codecov.io/github/decryptr/decryptr?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/decryptr)](http://cran.r-project.org/package=decryptr)
 
 Overview
 --------
@@ -31,7 +31,7 @@ file <- download_captcha("trt", path = "./img")
 decrypt(file, model = "trt")
 ```
 
-    ## [1] "d48w44"
+    ## [1] "yrt67d"
 
 Simple, right? The `decrypt()` funcion is this package's workhorse: it is able to take a captcha (either the path to a captcha file or a captcha object read with `read_captcha()`) and break it with a model (either the name of a known model, the path to a model file or a model object created with `train_model()`).
 
@@ -89,7 +89,7 @@ model <- train_model(captchas, verbose = FALSE)
 decrypt(file, model = model)
 ```
 
-    ## [1] "k6ek8m"
+    ## [1] "jre652"
 
 ``` r
 # We could also have loaded the model from disk
@@ -106,5 +106,5 @@ microbenchmark::microbenchmark(decrypt = decrypt(captcha, model))
 ```
 
     ## Unit: milliseconds
-    ##     expr      min       lq     mean   median       uq      max neval
-    ##  decrypt 6.734397 6.852274 8.486023 6.991617 7.359748 127.5941   100
+    ##     expr      min       lq     mean   median       uq     max neval
+    ##  decrypt 8.333295 9.256788 10.96834 9.713691 10.47587 106.873   100

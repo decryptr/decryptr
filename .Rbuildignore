@@ -6,3 +6,4 @@
 ^README_files$
 ^\.travis\.yml$
 ^appveyor\.yml$
+^codecov\.yml$
