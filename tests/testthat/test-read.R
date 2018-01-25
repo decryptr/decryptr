@@ -2,8 +2,12 @@ context("read")
 
 test_that("reading works", {
 
+  # Choose directory
+  path <- ifelse(dir.exists("test-captchas/"), "test-captchas/",
+                 "./tests/testthat/test-captchas/")
+
   # Setup
-  files <- list.files("../../img/", pattern = "_", full.names = TRUE)
+  files <- list.files(path, pattern = "_", full.names = TRUE)
 
   # Read captchas with and without answers
   cap <- read_captcha(files)
