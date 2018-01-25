@@ -84,7 +84,7 @@ classify_ <- function(cap, ans, path, rm_old, ...) {
   new_file <- stringr::str_c(path, "/", name, "_", ans, ".", ext)
 
   # Copy file to new address
-  file.copy(file, new_file)
+  file.copy(file, new_file, overwrite = TRUE)
   if (rm_old) { file.remove(file) }
 
   return(new_file)
