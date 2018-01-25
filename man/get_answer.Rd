@@ -4,10 +4,10 @@
 \alias{get_answer}
 \title{Get answer from filename and build answer matrix}
 \usage{
-get_answer(path)
+get_answer(file)
 }
 \arguments{
-\item{path}{Path to a captcha with its answer separated by and
+\item{file}{Path to a captcha with its answer separated by and
 underscore ('_') in the filename}
 }
 \description{

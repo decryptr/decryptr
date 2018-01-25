@@ -4,10 +4,10 @@
 \alias{read_captcha_}
 \title{Read a captcha file}
 \usage{
-read_captcha_(path, ans_in_path)
+read_captcha_(file, ans_in_path)
 }
 \arguments{
-\item{path}{Path to a captcha image}
+\item{file}{Path to a captcha image}
 
 \item{ans_in_path}{Whether or not the answer to the captcha is already
 in the path to the file (separated by and underscore in the filename)}
