@@ -9,9 +9,10 @@ print.captcha <- function(x, ...) {
   if (length(x) == 1) {
     cat("A captcha located at:\n", as.character(attr(x[[1]], "file")), sep = "")
   } else {
-    cat("A list of ", length(x), " captchas located at:\n")
+    cat("A list of", length(x), "captchas located at:\n")
     for (i in seq_along(x)) {
-      cat(i, ". ", as.character(attr(x[[i]], "file")), "\n", sep = "")
+      idx <- stringr::str_pad(i, stringr::str_length(length(x)), side = "left", pad = "0")
+      cat(idx, ". \"", as.character(attr(x[[i]], "file")), "\"\n", sep = "")
     }
   }
 }
