@@ -10,7 +10,7 @@ Authors@R: c(person("Julio", "Trecenti", role = c("aut")),
 Description: This tool helps you download, visualize and break captchas.
   It is built as an extensible API so anyone can contribute with their
   own captcha-breaking code.
-Depends: R (>= 3.4.2)
+Depends: R (>= 3.4.1)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
