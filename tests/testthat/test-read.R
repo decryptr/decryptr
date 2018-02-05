@@ -3,8 +3,8 @@ context("read")
 test_that("reading works", {
 
   # Choose directory
-  path <- ifelse(dir.exists("test-captchas/"), "test-captchas/",
-                 "./tests/testthat/test-captchas/")
+  path <- ifelse(dir.exists("sample-captchas/"), "sample-captchas/",
+                 "./tests/testthat/sample-captchas/")
 
   # Setup
   files <- list.files(path, pattern = "_", full.names = TRUE)

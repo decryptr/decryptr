@@ -3,13 +3,13 @@ context("classify")
 test_that("classification works", {
 
   # Choose directory
-  path <- ifelse(dir.exists("test-captchas/"), "test-captchas/",
-                 "./tests/testthat/test-captchas/")
+  path <- ifelse(dir.exists("sample-captchas/"), "sample-captchas/",
+                 "./tests/testthat/sample-captchas/")
 
   # Copy files to temporary dir
   dir <- tempdir()
   file.copy(path, dir, recursive = TRUE)
-  dir <- paste0(dir, "/test-captchas")
+  dir <- paste0(dir, "/sample-captchas")
 
   # Setup
   files <- list.files(dir, pattern = "^[^_]+$", full.names = TRUE)
