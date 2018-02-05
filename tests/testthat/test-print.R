@@ -10,7 +10,6 @@ test_that("printing works", {
 
   # Read objects we want to print
   cap <- read_captcha(files)
-  model <- load_model("trt")
 
   # Expectations
   expect_output(print(cap), "A list of 10.+01\\. \\\".*test-captchas//captcha")
