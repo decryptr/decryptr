@@ -2,6 +2,9 @@ context("model")
 
 test_that("reading models works", {
 
+  if (!keras:::have_h5py())
+    skip("h5py not available for testing")
+
   # Setup
   models <- list(
     load_model("rfb"),
@@ -25,22 +28,26 @@ test_that("reading models works", {
 
 test_that("training models works", {
 
+  if (!keras:::have_h5py())
+    skip("h5py not available for testing")
+
   # Choose directory
-  path <- ifelse(dir.exists("test-captchas/"), "test-captchas/",
-                 "./tests/testthat/test-captchas/")
+  path <- ifelse(dir.exists("sample-captchas/"), "sample-captchas/",
+                 "./tests/testthat/sample-captchas/")
+  path2 <- ifelse(dir.exists("sample-captchas/"), "./sample-model.hdf5",
+                 "./tests/testthat/sample-model.hdf5")
 
   # Setup
   files <- list.files(path, pattern = "_", full.names = TRUE)
   files <- files[stringr::str_length(files) > min(stringr::str_length(files))]
-  tmp <- tempfile(fileext = ".hdf5")
 
   # Read captcha
   cap_ans <- read_captcha(files, ans_in_path = TRUE)
 
   # Train model
-  model <- train_model(cap_ans, path = tmp)
+  model <- train_model(cap_ans, path = path2)
 
   # Expectations
   expect_equal(class(model), "model")
-  expect_gt(file.size(tmp), 12000000)
+  expect_gt(file.size(path2), 12000000)
 })
