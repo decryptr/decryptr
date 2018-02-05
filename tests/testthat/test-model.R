@@ -17,13 +17,13 @@ test_that("reading models works", {
 
   # Expectations
   expect_equal(class(models[[1]]), "model")
-  expect_equal(objsz(models[[1]]), 4544)
+  expect_gt(objsz(models[[1]]), 2000)
   expect_equal(class(models[[2]]), "model")
-  expect_equal(objsz(models[[2]]), 4544)
+  expect_gt(objsz(models[[2]]), 2000)
   expect_equal(class(models[[3]]), "model")
-  expect_equal(objsz(models[[3]]), 3192)
+  expect_gt(objsz(models[[3]]), 2000)
   expect_equal(class(models[[4]]), "model")
-  expect_equal(objsz(models[[4]]), 3872)
+  expect_gt(objsz(models[[4]]), 2000)
 })
 
 test_that("training models works", {
