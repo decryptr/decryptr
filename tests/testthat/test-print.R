@@ -1,6 +1,10 @@
 context("print")
 
 test_that("printing works", {
+
+  # File system on appveyor isn't unix-like
+  skip_on_appveyor()
+
   # Choose directory
   path <- ifelse(dir.exists("test-captchas/"), "test-captchas/",
                  "./tests/testthat/test-captchas/")

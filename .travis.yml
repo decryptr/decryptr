@@ -9,8 +9,6 @@ cache:
     - $HOME/.cache/pip
 
 env:
-  - KERAS_BACKEND="tensorflow"
-  - KERAS_BACKEND="theano" THEANO_FLAGS=optimizer=fast_compile
   - KERAS_IMPLEMENTATION="tensorflow"
 
 before_script:
