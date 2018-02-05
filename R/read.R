@@ -43,6 +43,7 @@ read_captcha_ <- function(file, ans_in_path) {
   # Create captcha object
   captcha <- list(y = answer, x = captcha)
   attr(captcha, "file") <- file
+  class(captcha) <- c("captcha")
 
   return(captcha)
 }

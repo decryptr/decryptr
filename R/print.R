@@ -6,8 +6,8 @@
 #'
 #' @export
 print.captcha <- function(x, ...) {
-  if (length(x) == 1) {
-    cat("A captcha located at:\n", as.character(attr(x[[1]], "file")), sep = "")
+  if (!is.null(purrr::pluck(x, "x"))) {
+    cat("A captcha located at:\n\"", as.character(attr(x, "file")), "\"", sep = "")
   } else {
     cat("A list of", length(x), "captchas located at:\n")
     for (i in seq_along(x)) {
@@ -35,9 +35,18 @@ print.model <- function(x, ...) {
 #'
 #' @export
 plot.captcha <- function(x, y, ...) {
-  if (length(x) == 1) { x <- x[[1]] }
+
+  # Stop if list
+  if (is.null(purrr::pluck(x, "x"))) {
+    stop("Can't plot a list of captchas, use `[[`")
+  }
+
+  # Plot
   img <- load_image(as.character(attr(x, "file")))
   op <- graphics::par(mar = rep(0, 4))
   graphics::plot(grDevices::as.raster(img), ...)
   graphics::par(op)
+
+  # Return raster silently
+  invisible(grDevices::as.raster(img))
 }
