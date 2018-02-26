@@ -4,13 +4,16 @@
 \alias{read_captcha}
 \title{Read captcha files}
 \usage{
-read_captcha(file, ans_in_path = FALSE)
+read_captcha(file, ans_in_path = FALSE, vocab = NULL)
 }
 \arguments{
 \item{file}{Paths to one or more captcha images}
 
 \item{ans_in_path}{Whether or not the answers to the captchas are already
 in the paths to the files (separated by and underscore in the filename)}
+
+\item{vocab}{Character vector with all possible values in the captcha. If
+not specified, answers won't be transformed to the matrix format.}
 }
 \value{
 A list of captcha objects
