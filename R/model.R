@@ -133,6 +133,7 @@ train_model <- function(data, frac_test = 0.1, n_epochs = 30, n_units = 256,
 #' @param captchas A list of answered captchas (read by
 #' [read_captcha()])
 #'
+#' @export
 join_captchas <- function(captchas) {
 
   # Separate captchas into xs and ys
@@ -143,9 +144,7 @@ join_captchas <- function(captchas) {
   ys <- join_answers(ys)
 
   # Create a matrix to contain all xs
-  xs <- array(
-    purrr::reduce(xs, c),
-    dim = c(length(xs), dim(xs[[1]])[1], dim(xs[[1]])[2], 1))
+  xs <- abind::abind(xs, along = 0.1)
 
   # Return a list with xs and ys
   return(list(y = ys, x = xs, n = dim(xs)[1]))
