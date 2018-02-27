@@ -4,11 +4,14 @@
 \alias{get_answer}
 \title{Get answer from filename and build answer matrix}
 \usage{
-get_answer(file)
+get_answer(file, vocab)
 }
 \arguments{
 \item{file}{Path to a captcha with its answer separated by and
 underscore ('_') in the filename}
+
+\item{vocab}{Character vector with all possible values in the captcha. If
+not specified, answers won't be transformed to the matrix format.}
 }
 \description{
 Get answer from filename and build answer matrix

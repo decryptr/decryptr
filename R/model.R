@@ -133,6 +133,7 @@ train_model <- function(data, frac_test = 0.1, n_epochs = 30, n_units = 256,
 #' @param captchas A list of answered captchas (read by
 #' [read_captcha()])
 #'
+#' @export
 join_captchas <- function(captchas) {
 
   # Separate captchas into xs and ys
@@ -143,9 +144,7 @@ join_captchas <- function(captchas) {
   ys <- join_answers(ys)
 
   # Create a matrix to contain all xs
-  xs <- array(
-    purrr::reduce(xs, c),
-    dim = c(length(xs), dim(xs[[1]])[1], dim(xs[[1]])[2], 1))
+  xs <- abind::abind(xs, along = 0.1)
 
   # Return a list with xs and ys
   return(list(y = ys, x = xs, n = dim(xs)[1]))
@@ -160,34 +159,24 @@ join_captchas <- function(captchas) {
 #'
 join_answers <- function(ys) {
 
-  # Resize an answer so that it is as wide as possible
-  resize_answer <- function(y, letters, n) {
+  if (is.character(ys[[1]])) {
 
-    # Create wide matrix
-    m <- matrix(0L, n, length(letters))
-    colnames(m) <- letters
+    # Get all distinct letters and letters per captcha
+    vocab <- ys %>%
+      purrr::flatten_chr() %>%
+      unique() %>% sort()
 
-    # Add y to wide matrix
-    what <- sort(unique(attr(y, "dimnames")[[2]]))
-    m[, what] <- y
+    # Get length of answers
+    n <- purrr::map_dbl(ys, length)
+    if (!all(n == n[1])) {
+      stop("Answers to all captchas must have the same length")
+    } else { n <- n[1] }
 
-    return(m)
+    # Apply resizing to all list of answers
+    ys <- purrr::map(ys, resize_answer, vocab)
+
   }
 
-  # Get all distinct letters and letters per captcha
-  letters <- ys %>%
-    purrr::map(~attr(.x, "dimnames")[[2]]) %>%
-    purrr::flatten_chr() %>%
-    unique() %>% sort()
-
-  # Get length of answers
-  n <- purrr::map_dbl(ys, nrow)
-  if (!all(n == n[1])) { stop("Answers to all captchas must have the same length") }
-  else { n <- n[1] }
-
-  # Apply resizing to all list of answers
-  ys <- purrr::map(ys, resize_answer, letters, n)
-
   # Join answers
-  plyr::laply(ys, function(x) { x })
+  abind::abind(ys, along = 0.1)
 }
