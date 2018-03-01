@@ -1,6 +1,6 @@
 Package: decryptr
 Title: An extensible API for breaking captchas
-Version: 0.2.1
+Version: 0.2.1.9000
 Authors@R: c(person("Julio", "Trecenti", role = c("aut")),
   person("Caio", "Lente", email = "ctlente@gmail.com", role = c("aut", "cre")),
   person("Daniel", "Falbel", role = c("aut")),
@@ -15,12 +15,12 @@ License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
+  abind,
   magrittr,
   stringr,
   httr,
   jpeg,
   png,
-  plyr,
   grDevices,
   readr,
   purrr,
