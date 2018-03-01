@@ -5,7 +5,7 @@
 #' text that is supposed to break the captchas.
 #'
 #' @param captcha The paths to one or more captchas or a list of
-#' captchas read with [read_captcha()]
+#' captchas read with [read_captcha()] or a raw scalar - used for web API's.
 #' @param model Either a model, the path to a model or the name of a
 #' known model (see [train_model()] and [load_model()])
 #'
@@ -14,7 +14,11 @@ decrypt <- function(captcha, model) {
 
   # Read captcha and model if necessary
   if (is.character(model)) { model <- load_model(model) }
-  if (is.character(captcha)) { captcha <- read_captcha(captcha) }
+  if (is.character(captcha)) {
+    captcha <- read_captcha(captcha)
+  } else if (is.raw(captcha)) {
+    captcha <- read_captcha_raw(captcha)
+  }
 
   # Iterate over each captcha
   purrr::map_chr(captcha, decrypt_, model)
@@ -28,7 +32,7 @@ decrypt <- function(captcha, model) {
 decrypt_ <- function(captcha, model) {
 
   # Reshape captcha so that it works with model
-  x <- array(dim = c(1, nrow(captcha$x), ncol(captcha$x), 1))
+  x <- array(dim = c(1, dim(captcha$x)))
   x[1,,,] <- captcha$x
 
   # Predict captcha with model

@@ -111,3 +111,17 @@ resize_answer <- function(answer, vocab) {
 
   return(mm)
 }
+
+read_captcha_raw <- function(x, ext = "png") {
+
+  if (ext %in% c("jpeg", "jpg")) {
+    img <- jpeg::readJPEG(x)
+  } else if (ext == "png") {
+    img <- png::readPNG(x)
+  }
+
+  captcha <- list(list(x = grey(img), y = NULL))
+  class(captcha) <- "captcha"
+  captcha
+}
+
