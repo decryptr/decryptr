@@ -111,3 +111,25 @@ resize_answer <- function(answer, vocab) {
 
   return(mm)
 }
+
+read_captcha_raw <- function(x) {
+
+  img <- try_read_jpeg(x)
+  if (!is.array(img)) {
+    img <- try_read_png(x)
+  }
+  if (!is.array(img)) {
+    stop("decryptr doesn't know how to handle this kind of image")
+  }
+
+  captcha <- list(list(x = grey(img), y = NULL))
+  class(captcha) <- "captcha"
+  captcha
+}
+
+try_read_jpeg <- purrr::possibly(jpeg::readJPEG, otherwise = NA, quiet = TRUE)
+
+try_read_png <- purrr::possibly(png::readPNG, otherwise = NA, quiet = TRUE)
+
+
+

@@ -26,3 +26,16 @@ test_that("decryption works", {
   expect_equal(class(decrypt(cap, path2)), "character")
   expect_equal(class(decrypt(cap, "trt")), "character")
 })
+
+test_that("decrypt works with raw vector", {
+
+  if (!keras:::have_h5py())
+    skip("h5py not available for testing")
+
+  path <- ifelse(dir.exists("sample-captchas/"), "sample-captchas/",
+                 "./tests/testthat/sample-captchas/")
+
+  captcha_raw <- readr::read_file_raw(paste0(path, "captcha2bce28f1401c_da3vh3.jpeg"))
+
+  expect_equal(class(decrypt(captcha_raw, "trt")), "character")
+})
