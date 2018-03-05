@@ -29,6 +29,9 @@ test_that("decryption works", {
 
 test_that("decrypt works with raw vector", {
 
+  if (!keras:::have_h5py())
+    skip("h5py not available for testing")
+
   path <- ifelse(dir.exists("sample-captchas/"), "sample-captchas/",
                  "./tests/testthat/sample-captchas/")
 
