@@ -8,7 +8,7 @@ decrypt(captcha, model)
 }
 \arguments{
 \item{captcha}{The paths to one or more captchas or a list of
-captchas read with \code{\link[=read_captcha]{read_captcha()}}}
+captchas read with \code{\link[=read_captcha]{read_captcha()}} or a raw scalar - used for web API's.}
 
 \item{model}{Either a model, the path to a model or the name of a
 known model (see \code{\link[=train_model]{train_model()}} and \code{\link[=load_model]{load_model()}})}
