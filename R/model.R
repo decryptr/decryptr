@@ -14,7 +14,7 @@
 load_model <- function(model, labs = c(0:9, base::letters)) {
 
   # Load model either from a path or from decryptrModels
-  if (!(model %in% c("rfb", "trt", "tjmg", "esaj"))) {
+  if (!(model %in% c("rfb", "trt", "tjmg", "esaj", "rsc"))) {
     model <- keras::load_model_hdf5(model, compile = FALSE)
   } else {
     models <- decryptrModels::models
