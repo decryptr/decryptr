@@ -25,7 +25,8 @@ Imports:
   purrr,
   keras,
   progress,
-  decryptrModels
+  decryptrModels,
+    tfdatasets
 Remotes:
   decryptr/decryptrModels
 Suggests:
