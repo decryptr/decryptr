@@ -8,7 +8,7 @@ load_model(model, labs = c(0:9, base::letters))
 }
 \arguments{
 \item{model}{Either the path to a ".hdf5" file or the name of a known model
-(\code{"rfb"}, \code{"trt"}, \code{"tjmg"} or \code{"esaj"})}
+(\code{"rfb"}, \code{"trt"}, \code{"tjmg"} or \code{"esaj"}, \code{"rsc"}, \code{"cadesp"})}
 
 \item{labs}{A character vector with all the labels the model could possibly
 output (necessary when loading a homemade model)}
