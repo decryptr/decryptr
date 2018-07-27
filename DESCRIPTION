@@ -26,7 +26,7 @@ Imports:
   keras,
   progress,
   decryptrModels,
-    tfdatasets
+  tfdatasets
 Remotes:
   decryptr/decryptrModels
 Suggests:
@@ -34,7 +34,8 @@ Suggests:
   rmarkdown,
   testthat,
   covr,
-  readr
+  readr,
+  magick
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace", "collate"))

@@ -4,10 +4,12 @@
 \alias{load_image}
 \title{Read PNG or JPG}
 \usage{
-load_image(file, ...)
+load_image(file, magick, ...)
 }
 \arguments{
 \item{file}{Path to image}
+
+\item{magick}{use Magick package to read the file}
 
 \item{...}{Other arguments passed on to \code{\link[png:readPNG]{png::readPNG()}}
 or \code{\link[jpeg:readJPEG]{jpeg::readJPEG()}}}

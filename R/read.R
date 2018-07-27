@@ -11,18 +11,19 @@
 #' in the paths to the files (separated by and underscore in the filename)
 #' @param vocab Character vector with all possible values in the captcha. If
 #' not specified, answers won't be transformed to the matrix format.
+#' @param magick use Magick package to load the image
 #'
 #' @return A list of captcha objects
 #'
 #' @export
-read_captcha <- function(file, ans_in_path = FALSE, vocab = NULL) {
+read_captcha <- function(file, ans_in_path = FALSE, vocab = NULL, magick = FALSE) {
 
   # Check if files are images
   ext <- tolower(tools::file_ext(basename(file)))
   stopifnot(all(ext %in% c("jpeg", "jpg", "png")))
 
   # Iterate over files
-  out <- purrr::map(file, read_captcha_, ans_in_path, vocab)
+  out <- purrr::map(file, read_captcha_, ans_in_path, vocab, magick)
   class(out) <- c("captcha")
 
   return(out)
@@ -35,11 +36,12 @@ read_captcha <- function(file, ans_in_path = FALSE, vocab = NULL) {
 #' in the path to the file (separated by and underscore in the filename)
 #' @param vocab Character vector with all possible values in the captcha. If
 #' not specified, answers won't be transformed to the matrix format.
+#' @param magick use Magick package tor ead the file
 #'
-read_captcha_ <- function(file, ans_in_path, vocab) {
+read_captcha_ <- function(file, ans_in_path, vocab, magick) {
 
   # Load captcha
-  captcha <- grey(load_image(file))
+  captcha <- grey(load_image(file, magick))
 
   # Get answer from filename if necessary
   answer <- if (ans_in_path) { get_answer(file, vocab) } else { NULL }
@@ -55,16 +57,23 @@ read_captcha_ <- function(file, ans_in_path, vocab) {
 #' Read PNG or JPG
 #'
 #' @param file Path to image
+#' @param magick use Magick package to read the file
 #' @param ... Other arguments passed on to [png::readPNG()]
 #' or [jpeg::readJPEG()]
 #'
-load_image <- function(file, ...) {
+load_image <- function(file, magick, ...) {
 
-  ext <- tolower(tools::file_ext(basename(file)))
-  if (ext %in% c("jpeg", "jpg")) {
-    img <- jpeg::readJPEG(file, ...)
-  } else if (ext == "png") {
-    img <- png::readPNG(file, ...)
+  if (magick) {
+    img <- magick::image_read(file) %>%
+      magick::image_data("rgb") %>%
+      as.numeric()
+  } else {
+    ext <- tolower(tools::file_ext(basename(file)))
+    if (ext %in% c("jpeg", "jpg")) {
+      img <- jpeg::readJPEG(file, ...)
+    } else if (ext == "png") {
+      img <- png::readPNG(file, ...)
+    }
   }
 
   return(img)

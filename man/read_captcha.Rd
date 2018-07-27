@@ -4,7 +4,7 @@
 \alias{read_captcha}
 \title{Read captcha files}
 \usage{
-read_captcha(file, ans_in_path = FALSE, vocab = NULL)
+read_captcha(file, ans_in_path = FALSE, vocab = NULL, magick = FALSE)
 }
 \arguments{
 \item{file}{Paths to one or more captcha images}
@@ -14,6 +14,8 @@ in the paths to the files (separated by and underscore in the filename)}
 
 \item{vocab}{Character vector with all possible values in the captcha. If
 not specified, answers won't be transformed to the matrix format.}
+
+\item{magick}{use Magick package to load the image}
 }
 \value{
 A list of captcha objects
