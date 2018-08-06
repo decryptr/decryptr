@@ -40,7 +40,7 @@ read_captcha_ <- function(file, ans_in_path, vocab) {
 
   # Load captcha
   captcha <- load_image(file)
-  if (length(dim(captcha) == 1) captcha <- array(captcha, dim = c(dim(captcha), 3))
+  if (length(dim(captcha)) == 1) captcha <- array(captcha, dim = c(dim(captcha), 3))
   captcha <- grey(captcha)
       
   # Get answer from filename if necessary
