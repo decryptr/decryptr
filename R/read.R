@@ -39,8 +39,10 @@ read_captcha <- function(file, ans_in_path = FALSE, vocab = NULL) {
 read_captcha_ <- function(file, ans_in_path, vocab) {
 
   # Load captcha
-  captcha <- grey(load_image(file))
-
+  captcha <- load_image(file)
+  if (length(dim(captcha) == 1) captcha <- array(captcha, dim = c(dim(captcha), 3))
+  captcha <- grey(captcha)
+      
   # Get answer from filename if necessary
   answer <- if (ans_in_path) { get_answer(file, vocab) } else { NULL }
 
