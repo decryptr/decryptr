@@ -99,8 +99,8 @@ get_answer <- function(file, vocab) {
   # Collect answer from filename
   answer <- basename(file) %>%
     tools::file_path_sans_ext() %>%
-    stringr::str_extract("_([a-zA-Z0-9]+)$") %>%
-    stringr::str_sub(start = 2) %>%
+    stringr::str_extract("([a-zA-Z0-9]+)$") %>%
+    stringr::str_sub(start = 1) %>%
     stringr::str_to_lower() %>%
     stringr::str_split("") %>%
     purrr::flatten_chr()
