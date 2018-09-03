@@ -19,14 +19,13 @@ Imports:
   magrittr,
   stringr,
   httr,
-  jpeg,
-  png,
   grDevices,
   purrr,
   keras,
   progress,
   decryptrModels,
-    tfdatasets
+  tfdatasets,
+  magick
 Remotes:
   decryptr/decryptrModels
 Suggests:
@@ -36,5 +35,5 @@ Suggests:
   covr,
   readr
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace", "collate"))

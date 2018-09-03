@@ -27,3 +27,5 @@ vignettes/*.rds
 # Mac
 .DS_Store
 inst/doc
+tests/testthat/Rplots.pdf
+tests/testthat/sample-model.hdf5

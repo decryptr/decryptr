@@ -42,7 +42,7 @@ read_captcha_ <- function(file, ans_in_path, vocab) {
   captcha <- load_image(file)
   if (length(dim(captcha)) == 2) captcha <- array(captcha, dim = c(dim(captcha), 3))
   captcha <- grey(captcha)
-      
+
   # Get answer from filename if necessary
   answer <- if (ans_in_path) { get_answer(file, vocab) } else { NULL }
 
@@ -57,19 +57,12 @@ read_captcha_ <- function(file, ans_in_path, vocab) {
 #' Read PNG or JPG
 #'
 #' @param file Path to image
-#' @param ... Other arguments passed on to [png::readPNG()]
-#' or [jpeg::readJPEG()]
+#' @param ... Other arguments passed on to [magick::image_read()]
 #'
 load_image <- function(file, ...) {
-
-  ext <- tolower(tools::file_ext(basename(file)))
-  if (ext %in% c("jpeg", "jpg")) {
-    img <- jpeg::readJPEG(file, ...)
-  } else if (ext == "png") {
-    img <- png::readPNG(file, ...)
-  }
-
-  return(img)
+  magick::image_read(file, ...) %>%
+    magick::image_data('rgba') %>%
+    as.numeric()
 }
 
 #' Convert image to greyscale
@@ -129,9 +122,9 @@ read_captcha_raw <- function(x) {
   captcha
 }
 
-try_read_jpeg <- purrr::possibly(jpeg::readJPEG, otherwise = NA, quiet = TRUE)
+try_read_jpeg <- purrr::possibly(load_image, otherwise = NA, quiet = TRUE)
 
-try_read_png <- purrr::possibly(png::readPNG, otherwise = NA, quiet = TRUE)
+try_read_png <- purrr::possibly(load_image, otherwise = NA, quiet = TRUE)
 
 
 
