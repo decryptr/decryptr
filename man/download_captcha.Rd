@@ -4,8 +4,8 @@
 \alias{download_captcha}
 \title{Download captchas from a URL}
 \usage{
-download_captcha(url, n = 1, path = ".", secure = FALSE, timeout = 3,
-  ext = ".jpeg")
+download_captcha(url, n = 1, path = ".", secure = FALSE,
+  timeout = 3, ext = ".jpeg")
 }
 \arguments{
 \item{url}{URL from which to download captcha or the name of a known source

@@ -9,8 +9,7 @@ load_image(file, ...)
 \arguments{
 \item{file}{Path to image}
 
-\item{...}{Other arguments passed on to \code{\link[png:readPNG]{png::readPNG()}}
-or \code{\link[jpeg:readJPEG]{jpeg::readJPEG()}}}
+\item{...}{Other arguments passed on to \code{\link[magick:image_read]{magick::image_read()}}}
 }
 \description{
 Read PNG or JPG
