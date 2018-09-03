@@ -6,7 +6,7 @@
 #' [train_model()].
 #'
 #' @param model Either the path to a ".hdf5" file or the name of a known model
-#' (`"rfb"`, `"trt"`, `"tjmg"` or `"esaj"`, `"rsc"`, `"cadesp"`)
+#' (`"rfb"`, `"trt"`, `"tjmg"` or `"esaj"`, `"rsc"`, `"cadesp"`, `"nfesp"`)
 #' @param labs A character vector with all the labels the model could possibly
 #' output (necessary when loading a homemade model)
 #'
@@ -14,7 +14,7 @@
 load_model <- function(model, labs = c(0:9, base::letters)) {
 
   # Load model either from a path or from decryptrModels
-  if (!(model %in% c("rfb", "trt", "tjmg", "esaj", "rsc", "cadesp"))) {
+  if (!(model %in% c("rfb", "trt", "tjmg", "esaj", "rsc", "cadesp", "nfesp"))) {
     model <- keras::load_model_hdf5(model, compile = FALSE)
   } else {
     models <- decryptrModels::models
