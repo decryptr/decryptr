@@ -1,0 +1,194 @@
+---
+author:
+  - name: Julio Trecenti
+    affiliation: IME-USP, Curso-R
+    address: >
+      1010 Rua do Matao
+    email: \email{julio.trecenti@gmail.com}
+    url: http://jtrecenti.com
+  - name: Daniel Falbel
+    affiliation: Curso-R
+  - name: Caio Lente
+    affiliation: Curso-R
+title:
+  formatted: "\\pkg{decryptr} - Solving Captchas in R"
+  plain:     "decryptr - Solving Captchas in R"
+  short:     "\\pkg{decryptr} - Solving Captchas in R"
+abstract: >
+  \lipsum[1]
+keywords:
+  formatted: [keras, convolutional neural networks, captcha, "\\proglang{R}"]
+  plain:     [keras, convolutional neural networks, captcha, R]
+preamble: >
+  \usepackage{amsmath}
+  \usepackage{lipsum}
+classoption: nojss
+vignette: >
+  %\VignetteIndexEntry{decryptr - Solving Captchas in R}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+output: rticles::jss_article
+editor_options: 
+  chunk_output_type: console
+---
+
+# Introduction
+
+\lipsum[2]
+
+## Scope
+
+Captcha is a broad area. 
+
+\pkg{decryptr} only solves text based Captcha. They can be 
+
+## Software review
+
+\lipsum[2]
+
+## R software
+
+\lipsum[2]
+
+<!-- ----------------------------------------------------------------------- -->
+
+# General framework
+
+\pkg{decryptr} aims to provide the \proglang{R} user with the ability to solve some specific text based Captchas. It also provides a flexible methodology to fit models for new Captchas, and use these models along with other helper functions of the package. Because of the consistency of the approach to solve new Captchas, \pkg{decryptr} can be seen as a general solution to them.
+
+Figure \ref{fig:diagram} describes \pkg{decryptr}'s main functions in a visual flavour. The box-shaped nodes represent basic operations, like download, read, view and solve Captchas that already have fitted models. In contrast, the round-shaped nodes represent advanced operations, used mainly to fit a new model. The dashed nodes are functions from another packages (\code{plot()} from \pkg{base} and \code{fit_generator()} from \pkg{keras}), used to enhance the package functionality.
+
+```{r diagram, echo=FALSE, out.width="0.5\\textwidth", fig.cap="Visual representation of the package."}
+DiagrammeR::grViz("
+digraph decryptr {
+  graph [overlap = true]
+  
+  node [shape=box, fixedsize=true, width=1.4, height=0.5, fontsize=12]
+  download_captcha; read_captcha; decrypt
+
+  node [shape=circle, fixedsize=true, width=1, fontsize = 10]
+  model_generator; model_specs; model_compile; classify;
+
+  node [shape=circle, fixedsize=true, width=1, fontsize=10, style=dashed]
+  fit_generator;
+  
+  node [shape=box, fixedsize=true, width=1, height=0.5, fontsize=12, style=dashed]
+  plot;
+
+  download_captcha -> read_captcha;
+  read_captcha -> model_generator;
+  read_captcha -> plot;
+  model_generator -> plot;
+  model_specs -> model_compile;
+  model_compile -> fit_generator;
+  model_generator -> fit_generator;
+  fit_generator -> decrypt;
+  read_captcha -> classify;
+  read_captcha -> decrypt;
+}
+")
+```
+
+
+In this section we discuss how to download, read and decrypt Captcha values using \pkg{decryptr}.
+
+```{r eval=FALSE, echo=FALSE}
+gen <- model_generator("path/to/folder", ...)
+# easy way
+m <- model_specs(n_conv = 3, 
+                 n_channels = 64, 
+                 ...)
+
+# hard way
+input <- keras::layer_input(...)
+output <- input %>% 
+  keras::layer_conv_2d(...) %>% 
+  ... %>% 
+  keras::layer_flatten() %>% 
+  keras::layer_dense(...) %>% 
+  ... %>% 
+  keras::layer_activation()
+m <- keras::keras_model(input, output)
+
+# fit
+keras::fit_generator(m, gen)
+
+
+
+```
+
+
+## Download and read
+
+\lipsum[2]
+
+## Predict values using decrypt
+
+\lipsum[2]
+
+<!-- ----------------------------------------------------------------------- -->
+
+# Fitted models
+
+\lipsum[2]
+
+## Data
+
+\lipsum[2]
+
+## Trained model summary
+
+\lipsum[2]
+
+<!-- ----------------------------------------------------------------------- -->
+
+# Custom models
+
+\lipsum[2]
+
+## Logistic regression
+
+\lipsum[2]
+
+## Dense layer
+
+\lipsum[2]
+
+### Activation
+
+\lipsum[2]
+
+## Convolutional layer
+
+\lipsum[2]
+
+### Max pooling
+
+\lipsum[2]
+
+## Example
+
+### Classify images manually
+
+\lipsum[2]
+
+\lipsum[2]
+
+<!-- ----------------------------------------------------------------------- -->
+
+# Conclusion
+
+\lipsum[2]
+
+## Acknowledgement
+
+\lipsum[2]
+
+# References {-}
+
+<!-- ## Code formatting -->
+<!-- * \proglang{Java} -->
+<!-- * \pkg{plyr} -->
+<!-- * \code{print("abc")} -->
+
+
