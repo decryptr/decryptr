@@ -1,0 +1,498 @@
+\documentclass[article,nojss]{jss}
+\usepackage[utf8]{inputenc}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\author{
+Julio Trecenti\\IME-USP, Curso-R \And Daniel Falbel\\Curso-R \And Caio Lente\\IME-USP, Curso-R \And Victor Fossaluza\\IME-USP
+}
+\title{\pkg{decryptr} - Solving Captchas in R}
+
+\Plainauthor{Julio Trecenti, Daniel Falbel, Caio Lente, Victor Fossaluza}
+\Plaintitle{decryptr - Solving Captchas in R}
+\Shorttitle{\pkg{decryptr} - Solving Captchas in R}
+
+\Abstract{
+Captcha (Completely Automated Public Turing test to tell Computers and
+Humans Apart) are images that can be easily read by humans, but hard to
+interpret by machines. In this work we present the \pkg{decryptr}
+package which provides a complete and flexible framework to download,
+generate, model and solve text based Captchas in \proglang{R}. We
+describe the package main functionalities and use cases. We present an
+overview of the statistical learning techniques used to solve Captchas
+and describe how to create a customized model using convolutional neural
+networks.
+}
+
+\Keywords{keras, convolutional neural networks, captcha, \proglang{R}}
+\Plainkeywords{keras, convolutional neural networks, captcha, R}
+
+%% publication information
+%% \Volume{50}
+%% \Issue{9}
+%% \Month{June}
+%% \Year{2012}
+%% \Submitdate{}
+%% \Acceptdate{2012-06-04}
+
+\Address{
+    Julio Trecenti\\
+  IME-USP, Curso-R\\
+  1010 Rua do Matao\\
+  E-mail: \email{julio.trecenti@gmail.com}\\
+  URL: \url{http://jtrecenti.com}\\~\\
+        }
+
+% Pandoc header
+
+\usepackage{amsmath} \usepackage{lipsum} \usepackage{float} \usepackage{booktabs}
+
+\begin{document}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+Captcha (Completely Automated Public Turing test to tell Computers and
+Humans Apart) is a technique used in many websites to prevent automated
+access. The simplest Captcha is an image containing random and distorted
+alphanumeric characters. Usually these images can be easily read by
+humans, but hard to interpret by machines. Scientists try to solve
+Captchas (i.e.~take an image and return a text) as a way to test the
+performance of predictive models.
+
+Figure \ref{fig:captcha-example} represents a Captcha example. In
+mathematical notation, the image is a matrix
+\(\mathbf X = \{x_{ijk}\}_{N\times M \times R}\), where \(N\) is the
+number of lines, \(M\) is the number of columns and \(R\) is the number
+of \emph{colors}, or \emph{channels}, as we'll call from now on. We call
+the element \(x_{nm\cdot} \in [0,1]\) a \emph{pixel}, which is our
+observational unit. Figure \ref{fig:captcha-example} a coloured image
+with dimensions \((40\times120\times3)\) has 50,400 pixels, organized in
+three different channels. Our response variable is the Captcha label,
+which in this case is \code{8722}. The main task of a Captcha solver is
+to take an image \(X\) as \emph{input} and evaluate the correct label as
+\emph{output}.
+
+\begin{CodeChunk}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.2\textwidth]{captcha1d316e586b08} 
+
+}
+
+\caption[Captcha example, extracted from Rio Grande do Sul State Court, in Brazil]{Captcha example, extracted from Rio Grande do Sul State Court, in Brazil.}\label{fig:captcha-example}
+\end{figure}
+\end{CodeChunk}
+
+In this work present the \pkg{decryptr} package, which provides a
+complete and flexible framework to download, generate, fit models and
+solve text based Captchas in \proglang{R}. In Section \ref{framework} we
+describe the package main functionalities and use cases. In section
+\ref{fitted} we show the data used to fit models and the fitted models
+to all the Captchas that we are already able to solve. Finally, in
+Section \ref{custom} we present an overview of the statistical learning
+techniques used to solve Captchas and explain with examples how to
+describe and fit customized models.
+
+\hypertarget{scope}{%
+\subsection{Scope}\label{scope}}
+
+\pkg{decryptr} only solves text based Captchas. It is not designed to
+solve task based Captchas nor object detection based Captchas, like
+reCaptcha 2.0. \pkg{decryptr} can deal with any alphanumeric dictionary
+characters inside images with any length, including variable length
+Captchas.
+
+\pkg{decryptr}'s models are fitted using Convolutional Neural Networks
+(CNN; \citealt{lecun1995convolutional}). CNNs are highly non linear
+supervised models that are used mainly to recognize objects in images
+and classify texts. We use the \pkg{keras} package \citep{kerasjj} to
+fit these models. In Section \ref{custom} we describe how to fit custom
+Captcha solvers using \pkg{keras} and \pkg{decryptr}.
+
+\hypertarget{software-review}{%
+\subsection{Software review}\label{software-review}}
+
+\lipsum[2]
+
+\hypertarget{r-software}{%
+\subsection{R software}\label{r-software}}
+
+\lipsum[2]
+
+\hypertarget{framework}{%
+\section{General framework}\label{framework}}
+
+\pkg{decryptr} aims to provide the \proglang{R} user with the ability to
+solve some specific text based Captchas. It also provides a flexible
+methodology to fit models for new Captchas, and use these models along
+with other helper functions of the package. Because of the consistency
+of the approach to solve new Captchas, \pkg{decryptr} can be seen as a
+general solution to them.
+
+Actually, \pkg{decryptr} is more than an \proglang{R} package. It is a
+system that includes an \emph{Application Programming Interface} (API),
+which can be used to download, solve Captchas and validate Captcha
+solvers. The API is public, and the documentation can be accessed in
+\url{https://decryptr.xyz/api}. The decryptr system is described in
+Figure \ref{fig:decryptr-system}.
+
+\begin{CodeChunk}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.5\textwidth]{decryptr_jss_files/figure-latex/decryptr-system-1} 
+
+}
+
+\caption[The decryptr system]{The decryptr system. \pkg{decryptr}, \pkg{decryptrModels} and \pkg{decryptrData} are \proglang{R} packages, while \pkg{decryptpy} is a \proglang{python} module that mirrors \pkg{decryptr}'s functionality, \pkg{decryptrAPI} is an API to solve Captchas as a service, and \pkg{decryptView} is a shiny app, used to classify Captchas manually and make annotations.}\label{fig:decryptr-system}
+\end{figure}
+\end{CodeChunk}
+
+Figure \ref{fig:diagram} describes \pkg{decryptr}'s main functions in a
+visual flavor. The box-shaped nodes represent basic operations, like
+download, read, view and solve Captchas that already have fitted models.
+In contrast, the round-shaped nodes represent advanced operations, used
+mainly to fit a new model. The dashed nodes are functions from another
+packages (\code{plot()} from \pkg{base} and \code{fit_generator()} from
+\pkg{keras}), used to enhance the package functionality.
+
+\begin{CodeChunk}
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\textwidth]{decryptr_jss_files/figure-latex/diagram-1} 
+
+}
+
+\caption[Visual representation of the package]{Visual representation of the package.}\label{fig:diagram}
+\end{figure}
+\end{CodeChunk}
+
+\hypertarget{download-captchas-from-the-web}{%
+\subsection{Download Captchas from the
+web}\label{download-captchas-from-the-web}}
+
+The \code{download_captcha} function downloads an image from a specific
+URL. By default, the image is downloaded to the user's working
+directory. The option \code{n} can be used to control the number of
+Captchas to be downloaded. One can set some timeout and specify the file
+extension. By default, the extention is extracted from the MIME-type of
+the responde headers.
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> tmp <- tempdir()
+R> u_cpt <- "https://www4.tjmg.jus.br/juridico/sf/captcha.svl"
+R> download_captcha(url = u_cpt, n = 2, path = tmp)
+\end{CodeInput}
+\end{CodeChunk}
+
+\begin{verbatim}
+[1] "/tmp/Rtmp6L21cm/captcha1d31d0f4162.jpeg"                               
+[2] "/tmp/Rtmp6L21cm/captcha1d3166a667d3.jpeg"
+\end{verbatim}
+
+Some Captchas have shorcuts, obtained through decryptr's public API. The
+available Captchas at the time this document was written are described
+in Table \ref{tab:avaliable-captchas}.
+
+\begin{CodeChunk}
+\begin{table}[t]
+
+\caption{\label{tab:avaliable-captchas}Available shortcuts do download Captchas.}
+\centering
+\begin{tabular}{cl}
+\toprule
+Alias & Description\\
+\midrule
+tjmg & Minas Gerais State Court\\
+tjrs & Rio Grande do Sul State Court\\
+tjrj & Rio de Janeiro State Court\\
+trt & Rio de Janeiro Labor Court\\
+rfb & Brazilian Federal Revenue Office\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{CodeChunk}
+
+\hypertarget{read-captchas-from-image-files}{%
+\subsection{Read Captchas from image
+files}\label{read-captchas-from-image-files}}
+
+The \code{read_captcha()} function loads image files into \proglang{R}.
+This enables the user to easily view Captchas using \code{plot()}
+function and is also an intermediate step to decrypt, classify and
+create generators, as described in Figure \ref{fig:diagram}. The result
+of \code{read_captcha()} is a list of \proglang{S3} class \code{captcha}
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> captcha_files <- download_captcha("tjrs", 2, tmp)
+R> (captcha <- read_captcha(files))
+\end{CodeInput}
+\end{CodeChunk}
+
+\begin{verbatim}
+A list of 2 captchas located at:
+1. "/tmp/Rtmp6L21cm/captcha1d316785c15c.jpeg"
+2. "/tmp/Rtmp6L21cm/captcha1d311bb1a4bb.jpeg"
+\end{verbatim}
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> plot(captcha)
+\end{CodeInput}
+\end{CodeChunk}
+
+\begin{CodeChunk}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.2\textwidth]{decryptr_jss_files/figure-latex/two-img-1} 
+
+}
+
+\caption[Plotting Captcha files read with \code{read\_captcha()}]{Plotting Captcha files read with \code{read\_captcha()}.}\label{fig:two-img}
+\end{figure}
+\end{CodeChunk}
+
+When there are too many Captchas to view, \pkg{decryptr} limits the
+number of showed Captchas to 16, and asks the user to view the next 16.
+One can override this option by, say, 25 images, setting
+\code{options(decryptr.max.view = 25)} or \code{plot(captchas, n = 25)}.
+
+\hypertarget{predict-values-using-decrypt}{%
+\subsection{Predict values using
+decrypt}\label{predict-values-using-decrypt}}
+
+The \code{decrypt} function is the main operation of \pkg{decryptr}.
+Given one or more Captchas and a model, it returns the solution to the
+Captchas.
+
+The first argument can be either a character vector containing the paths
+to the Captchas or the object returned by the \code{read_captcha()}
+function.
+
+The second argument can be either an ajusted \pkg{keras} model returned
+by \code{load_model()} function or just the alias of the model. The
+difference of these approaches is that the latter must load the model
+every time the user makes a prediction, while the former loads the model
+just once.
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> decrypt(captcha, "tjrs")
+\end{CodeInput}
+\end{CodeChunk}
+
+\begin{verbatim}
+[1] "7722"
+[2] "8722"
+\end{verbatim}
+
+\hypertarget{fitted}{%
+\section{Fitted models}\label{fitted}}
+
+\pkg{decryptr} provides specialized models to specific Captcha types
+with high accuracy rate (above 95\%). The fitted models are stored in
+\pkg{decryptrModels}, which must be installed to use inside
+\pkg{decryptr}.
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> tjrs_model <- load_model("tjrs")
+\end{CodeInput}
+\end{CodeChunk}
+
+The model object is a list containing two elements: i) the complete
+dictionary of the possible characters inside a Captcha and ii) the
+fitted \code{keras} model used to make predictions. in \code{tjrs}
+example, these are
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> tjrs_model$labs
+\end{CodeInput}
+\end{CodeChunk}
+
+\begin{verbatim}
+[1] "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"
+\end{verbatim}
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> tjrs_model$model
+\end{CodeInput}
+\end{CodeChunk}
+
+\begin{verbatim}
+Model
+_______________________________________________________________________
+Layer (type)                   Output Shape                 Param #    
+=======================================================================
+conv2d_4 (Conv2D)              (None, 40, 110, 4)           104        
+_______________________________________________________________________
+max_pooling2d_4 (MaxPooling2D) (None, 20, 55, 4)            0          
+_______________________________________________________________________
+conv2d_5 (Conv2D)              (None, 20, 55, 16)           1616       
+_______________________________________________________________________
+max_pooling2d_5 (MaxPooling2D) (None, 10, 27, 16)           0          
+_______________________________________________________________________
+conv2d_6 (Conv2D)              (None, 10, 27, 32)           12832      
+_______________________________________________________________________
+max_pooling2d_6 (MaxPooling2D) (None, 5, 13, 32)            0          
+_______________________________________________________________________
+flatten_2 (Flatten)            (None, 2080)                 0          
+_______________________________________________________________________
+dense_3 (Dense)                (None, 16)                   33296      
+_______________________________________________________________________
+dropout_2 (Dropout)            (None, 16)                   0          
+_______________________________________________________________________
+dense_4 (Dense)                (None, 50)                   850        
+_______________________________________________________________________
+reshape_2 (Reshape)            (None, 5, 10)                0          
+_______________________________________________________________________
+activation_2 (Activation)      (None, 5, 10)                0          
+=======================================================================
+Total params: 48,698
+Trainable params: 48,698
+Non-trainable params: 0
+_______________________________________________________________________
+\end{verbatim}
+
+\hypertarget{data}{%
+\subsection{Data}\label{data}}
+
+Unfortunately the data needed to fit Captcha solvers do not comply with
+CRAN package policies. The size of a complete dataset of images can sum
+up to a couple of Gigabytes.
+
+To overcome this limitation, we host the \url{https://decryptr.xyz/data}
+site to store the Captcha raw images and provide the
+\code{download_captcha_data()} to help with the download step. This
+function downloads the compressed data from decryptr's site and
+decompresses it in a path specified by the user.
+
+\begin{CodeChunk}
+
+\begin{CodeInput}
+R> tmp <- tempdir()
+R> download_captcha_data("rfb", tmp)
+\end{CodeInput}
+\end{CodeChunk}
+
+\begin{verbatim}
+[=================================================================>]  100 %
+
+Data were downloaded in "/tmp/Rtmp7grAD8"
+Use read_captcha() function to load the captchas into memory and
+use model_generator() to create a data generator.
+\end{verbatim}
+
+\hypertarget{trained-model-summary}{%
+\subsection{Trained model summary}\label{trained-model-summary}}
+
+The complete list of models and their accuracy rate are described in
+Table \ref{tab:model-summary}. The accuracy rate was calculated using
+\emph{oracles}, which are functions that verify if the Captcha was
+solved by accessing the original site automatically, passing through the
+Captcha to access some content. Because the tests were made in
+production, the estimated accuracy rates are very reliable.
+
+\begin{CodeChunk}
+\begin{table}[t]
+
+\caption{\label{tab:model-summary}decryptr available models.}
+\centering
+\begin{tabular}{crr}
+\toprule
+Alias & Train examples & Accuracy\\
+\midrule
+rfb & 25,000 & 95\%\\
+trt & 5,000 & 96\%\\
+tjmg & 10,000 & 100\%\\
+tjrs & 8,000 & 92\%\\
+tjrj & 10,000 & 99\%\\
+rsc & 5,000 & 98\%\\
+cadesp & 2,000 & 92\%\\
+nfesp & 40,000 & 88\%\\
+sefaz\_sp & 30,000 & 80\%\\
+sintegra\_rj & 5,000 & 80\%\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{CodeChunk}
+
+In the future, more models will be added to this list, along with
+non-specialized models that try to generalize for new Captchas, but with
+lower accuracy rates.
+
+\hypertarget{custom}{%
+\section{Custom models}\label{custom}}
+
+\lipsum[2]
+
+\hypertarget{logistic-regression}{%
+\subsection{Logistic regression}\label{logistic-regression}}
+
+\lipsum[2]
+
+\hypertarget{dense-layer}{%
+\subsection{Dense layer}\label{dense-layer}}
+
+\lipsum[2]
+
+\hypertarget{activation}{%
+\subsubsection{Activation}\label{activation}}
+
+\lipsum[2]
+
+\hypertarget{convolutional-layer}{%
+\subsection{Convolutional layer}\label{convolutional-layer}}
+
+\lipsum[2]
+
+\hypertarget{max-pooling}{%
+\subsubsection{Max pooling}\label{max-pooling}}
+
+\lipsum[2]
+
+\hypertarget{example}{%
+\subsection{Example}\label{example}}
+
+\lipsum[2]
+
+\hypertarget{classify-images-manually}{%
+\subsubsection{Classify images
+manually}\label{classify-images-manually}}
+
+\lipsum[2]
+
+\hypertarget{shiny-app}{%
+\subsubsection{Shiny app}\label{shiny-app}}
+
+\lipsum[2]
+
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
+
+\lipsum[2]
+
+\hypertarget{acknowledgement}{%
+\subsection{Acknowledgement}\label{acknowledgement}}
+
+\lipsum[2]
+
+\bibliography{bibliography.bib}
+
+
+\end{document}
+
