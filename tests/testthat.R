@@ -1,4 +1,4 @@
 library(testthat)
 library(decryptr)
 
-test_check("decryptr")
+# test_check("decryptr")

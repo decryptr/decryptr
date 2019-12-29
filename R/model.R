@@ -53,76 +53,78 @@ load_model <- function(model, labs = c(0:9, base::letters)) {
 train_model <- function(data, frac_test = 0.1, n_epochs = 30, n_units = 256,
                         batch_size = 64, path = "./model.hdf5", verbose = TRUE) {
 
-  # Check whether frac_test is less than or equal to 100%
-  stopifnot(frac_test <= 1.0)
+  stop("DEFUNCT")
 
-  # Convert list of captchas to expected format
-  data <- join_captchas(data)
-
-  # Get absolute numbers
-  n_tot <- data$n
-  n_test <- n_tot*frac_test
-
-  # Create sample for training
-  my_sample <- sample(seq_len(n_tot), n_tot - n_test, replace = FALSE)
-
-  # Create model
-  model <- keras_model_sequential()
-  model %>%
-    layer_conv_2d(
-      input_shape = dim(data$x)[-1],
-      filters = 16,
-      kernel_size = c(5, 5),
-      padding = "same",
-      activation = "relu") %>%
-    layer_max_pooling_2d() %>%
-    layer_conv_2d(
-      filters = 32,
-      kernel_size = c(5, 5),
-      padding = "same",
-      activation = "relu") %>%
-    layer_max_pooling_2d() %>%
-    layer_conv_2d(
-      filters = 64,
-      kernel_size = c(5, 5),
-      padding = "same",
-      activation = "relu") %>%
-    layer_max_pooling_2d() %>%
-    layer_flatten() %>%
-    layer_dense(units = n_units) %>%
-    layer_dropout(.1) %>%
-    layer_dense(units = prod(dim(data$y)[-1])) %>%
-    layer_reshape(target_shape = dim(data$y)[-1]) %>%
-    layer_activation("softmax")
-
-  # Print model if necessary
-  if (verbose) { print(model) }
-
-  # Compile and fit model
-  model %>%
-    compile(
-      optimizer = "adam",
-      loss = "categorical_crossentropy",
-      metrics = "accuracy")
-  model %>%
-    fit(
-      x = data$x[my_sample, , , , drop = FALSE],
-      y = data$y[my_sample, , , drop = FALSE],
-      batch_size = batch_size,
-      epochs = n_epochs,
-      shuffle = TRUE,
-      validation_data = list(
-        data$x[-my_sample, , , , drop = FALSE],
-        data$y[-my_sample, , , drop = FALSE]))
-
-  # Save model if necessary
-  if (!is.null(path)) { keras::save_model_hdf5(model, path) }
-
-  # Create model object
-  out <- list(model = model, labs = dimnames(data$y)[[3]])
-  class(out) <- "model"
-
-  return(out)
+  # # Check whether frac_test is less than or equal to 100%
+  # stopifnot(frac_test <= 1.0)
+  #
+  # # Convert list of captchas to expected format
+  # data <- join_captchas(data)
+  #
+  # # Get absolute numbers
+  # n_tot <- data$n
+  # n_test <- n_tot*frac_test
+  #
+  # # Create sample for training
+  # my_sample <- sample(seq_len(n_tot), n_tot - n_test, replace = FALSE)
+  #
+  # # Create model
+  # model <- keras_model_sequential()
+  # model %>%
+  #   layer_conv_2d(
+  #     input_shape = dim(data$x)[-1],
+  #     filters = 16,
+  #     kernel_size = c(5, 5),
+  #     padding = "same",
+  #     activation = "relu") %>%
+  #   layer_max_pooling_2d() %>%
+  #   layer_conv_2d(
+  #     filters = 32,
+  #     kernel_size = c(5, 5),
+  #     padding = "same",
+  #     activation = "relu") %>%
+  #   layer_max_pooling_2d() %>%
+  #   layer_conv_2d(
+  #     filters = 64,
+  #     kernel_size = c(5, 5),
+  #     padding = "same",
+  #     activation = "relu") %>%
+  #   layer_max_pooling_2d() %>%
+  #   layer_flatten() %>%
+  #   layer_dense(units = n_units) %>%
+  #   layer_dropout(.1) %>%
+  #   layer_dense(units = prod(dim(data$y)[-1])) %>%
+  #   layer_reshape(target_shape = dim(data$y)[-1]) %>%
+  #   layer_activation("softmax")
+  #
+  # # Print model if necessary
+  # if (verbose) { print(model) }
+  #
+  # # Compile and fit model
+  # model %>%
+  #   compile(
+  #     optimizer = "adam",
+  #     loss = "categorical_crossentropy",
+  #     metrics = "accuracy")
+  # model %>%
+  #   fit(
+  #     x = data$x[my_sample, , , , drop = FALSE],
+  #     y = data$y[my_sample, , , drop = FALSE],
+  #     batch_size = batch_size,
+  #     epochs = n_epochs,
+  #     shuffle = TRUE,
+  #     validation_data = list(
+  #       data$x[-my_sample, , , , drop = FALSE],
+  #       data$y[-my_sample, , , drop = FALSE]))
+  #
+  # # Save model if necessary
+  # if (!is.null(path)) { keras::save_model_hdf5(model, path) }
+  #
+  # # Create model object
+  # out <- list(model = model, labs = dimnames(data$y)[[3]])
+  # class(out) <- "model"
+  #
+  # return(out)
 }
 
 
@@ -185,92 +187,94 @@ train_model_generator <- function(data,
                                   path = "./model.hdf5",
                                   verbose = TRUE) {
 
-  # Check whether frac_test is less than or equal to 100%
-  stopifnot(frac_test <= 1.0)
-  # Get absolute numbers
-  n_tot <- length(data)
-  n_test <- n_tot * frac_test
+  stop("DEFUNCT")
 
-  data_dims <- join_captchas(data[1:2])
-  vocab <- c(letters, 0:9)
-
-  df <- list(
-    fname = as.character(data),
-    mat = data %>%
-      purrr::map(get_answer, vocab = vocab) %>%
-      plyr:::list_to_array()
-  )
-  ds_train <- list(
-    fname = df$fname[id_train],
-    mat = df$mat[id_train,,,drop = FALSE]
-  ) %>% data_generator(32, TRUE)
-
-  ds_test <- list(
-    fname = df$fname[-id_train],
-    mat = df$mat[-id_train,,,drop = FALSE]
-  ) %>% data_generator(32, TRUE)
-
-  # Create sample for training
-  my_sample <- sample(seq_len(n_tot), n_tot - n_test, replace = FALSE)
-
-  # Create model
-  model <- keras_model_sequential()
-  model %>%
-    layer_conv_2d(
-      input_shape = dim(data_dims$x)[-1],
-      filters = 16,
-      kernel_size = c(5, 5),
-      padding = "same",
-      activation = "relu") %>%
-    layer_max_pooling_2d() %>%
-    layer_conv_2d(
-      filters = 32,
-      kernel_size = c(5, 5),
-      padding = "same",
-      activation = "relu") %>%
-    layer_max_pooling_2d() %>%
-    layer_conv_2d(
-      filters = 64,
-      kernel_size = c(5, 5),
-      padding = "same",
-      activation = "relu") %>%
-    layer_max_pooling_2d() %>%
-    layer_flatten() %>%
-    layer_dense(units = n_units) %>%
-    layer_dropout(.1) %>%
-    layer_dense(units = prod(dim(data_dims$y)[-1])) %>%
-    layer_reshape(target_shape = dim(data_dims$y)[-1]) %>%
-    layer_activation("softmax")
-
-  # Print model if necessary
-  if (verbose) { print(model) }
-
-  # Compile and fit model
-
-  # Compile model
-  model %>% compile(
-    loss = loss_categorical_crossentropy,
-    optimizer = optimizer_sgd(0.5),
-    metrics = c("accuracy")
-  )
-
-  # Train model
-  model %>% fit_generator(
-    generator = ds_train,
-    steps_per_epoch = 200,
-    epochs = n_epochs,
-    validation_data = ds_test,
-    validation_steps = 20
-  )
-
-  # Save model if necessary
-  if (!is.null(path)) { keras::save_model_hdf5(model, path) }
-
-  # Create model object
-  out <- list(model = model, labs = dimnames(data_dims$y)[[3]])
-  class(out) <- "model"
-
-  return(out)
+  # # Check whether frac_test is less than or equal to 100%
+  # stopifnot(frac_test <= 1.0)
+  # # Get absolute numbers
+  # n_tot <- length(data)
+  # n_test <- n_tot * frac_test
+  #
+  # data_dims <- join_captchas(data[1:2])
+  # vocab <- c(letters, 0:9)
+  #
+  # df <- list(
+  #   fname = as.character(data),
+  #   mat = data %>%
+  #     purrr::map(get_answer, vocab = vocab) %>%
+  #     plyr:::list_to_array()
+  # )
+  # ds_train <- list(
+  #   fname = df$fname[id_train],
+  #   mat = df$mat[id_train,,,drop = FALSE]
+  # ) %>% data_generator(32, TRUE)
+  #
+  # ds_test <- list(
+  #   fname = df$fname[-id_train],
+  #   mat = df$mat[-id_train,,,drop = FALSE]
+  # ) %>% data_generator(32, TRUE)
+  #
+  # # Create sample for training
+  # my_sample <- sample(seq_len(n_tot), n_tot - n_test, replace = FALSE)
+  #
+  # # Create model
+  # model <- keras_model_sequential()
+  # model %>%
+  #   layer_conv_2d(
+  #     input_shape = dim(data_dims$x)[-1],
+  #     filters = 16,
+  #     kernel_size = c(5, 5),
+  #     padding = "same",
+  #     activation = "relu") %>%
+  #   layer_max_pooling_2d() %>%
+  #   layer_conv_2d(
+  #     filters = 32,
+  #     kernel_size = c(5, 5),
+  #     padding = "same",
+  #     activation = "relu") %>%
+  #   layer_max_pooling_2d() %>%
+  #   layer_conv_2d(
+  #     filters = 64,
+  #     kernel_size = c(5, 5),
+  #     padding = "same",
+  #     activation = "relu") %>%
+  #   layer_max_pooling_2d() %>%
+  #   layer_flatten() %>%
+  #   layer_dense(units = n_units) %>%
+  #   layer_dropout(.1) %>%
+  #   layer_dense(units = prod(dim(data_dims$y)[-1])) %>%
+  #   layer_reshape(target_shape = dim(data_dims$y)[-1]) %>%
+  #   layer_activation("softmax")
+  #
+  # # Print model if necessary
+  # if (verbose) { print(model) }
+  #
+  # # Compile and fit model
+  #
+  # # Compile model
+  # model %>% compile(
+  #   loss = loss_categorical_crossentropy,
+  #   optimizer = optimizer_sgd(0.5),
+  #   metrics = c("accuracy")
+  # )
+  #
+  # # Train model
+  # model %>% fit_generator(
+  #   generator = ds_train,
+  #   steps_per_epoch = 200,
+  #   epochs = n_epochs,
+  #   validation_data = ds_test,
+  #   validation_steps = 20
+  # )
+  #
+  # # Save model if necessary
+  # if (!is.null(path)) { keras::save_model_hdf5(model, path) }
+  #
+  # # Create model object
+  # out <- list(model = model, labs = dimnames(data_dims$y)[[3]])
+  # class(out) <- "model"
+  #
+  # return(out)
 }
 
 

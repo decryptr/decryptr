@@ -15,17 +15,22 @@ License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-  abind,
-  magrittr,
-  stringr,
-  httr,
-  grDevices,
-  purrr,
-  keras,
-  progress,
-  decryptrModels,
-  tfdatasets,
-  magick
+    abind,
+    magrittr,
+    stringr,
+    httr,
+    grDevices,
+    purrr,
+    keras,
+    progress,
+    decryptrModels,
+    tfdatasets,
+    magick,
+    plyr,
+    tensorflow,
+    rsample,
+    tibble,
+    fs
 Remotes:
   decryptr/decryptrModels
 Suggests:
@@ -35,5 +40,5 @@ Suggests:
   covr,
   readr
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace", "collate"))
