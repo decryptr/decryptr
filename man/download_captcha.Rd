@@ -4,8 +4,14 @@
 \alias{download_captcha}
 \title{Download captchas from a URL}
 \usage{
-download_captcha(url, n = 1, path = ".", secure = FALSE,
-  timeout = 3, ext = ".jpeg")
+download_captcha(
+  url,
+  n = 1,
+  path = ".",
+  secure = FALSE,
+  timeout = 3,
+  ext = ".jpeg"
+)
 }
 \arguments{
 \item{url}{URL from which to download captcha or the name of a known source
@@ -27,7 +33,7 @@ A vector with the paths to the downloaded files
 }
 \description{
 This is a generic function to download captchas from any
-webssite given a captcha's URL. \code{download_captcha_*()} are aliases for
+webssite given a captcha's URL. \verb{download_captcha_*()} are aliases for
 some known captchas of public services in Brazil.
 }
 \section{IP blocking}{

@@ -4,8 +4,15 @@
 \alias{train_model}
 \title{Craete a model to break image captchas using keras}
 \usage{
-train_model(data, frac_test = 0.1, n_epochs = 30, n_units = 256,
-  batch_size = 64, path = "./model.hdf5", verbose = TRUE)
+train_model(
+  data,
+  frac_test = 0.1,
+  n_epochs = 30,
+  n_units = 256,
+  batch_size = 64,
+  path = "./model.hdf5",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{data}{A list of previously-classified captchas read with
