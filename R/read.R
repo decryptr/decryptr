@@ -82,12 +82,22 @@ grey <- function(img) {
 #'
 get_answer <- function(file, vocab) {
 
+  if (any(stringr::str_detect(vocab, "A-Z")))
+    upper_case <- TRUE
+  else
+    upper_case <- FALSE
+
+
   # Collect answer from filename
   answer <- basename(file) %>%
     tools::file_path_sans_ext() %>%
     stringr::str_extract("_([a-zA-Z0-9]+)$") %>%
-    stringr::str_sub(start = 2) %>%
-    stringr::str_to_lower() %>%
+    stringr::str_sub(start = 2)
+
+  if (!upper_case)
+    answer <- stringr::str_to_lower(answer)
+
+  answer <- answer %>%
     stringr::str_split("") %>%
     purrr::flatten_chr()
 
