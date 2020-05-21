@@ -35,5 +35,5 @@ Suggests:
   covr,
   readr
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace", "collate"))
