@@ -15,6 +15,5 @@ output (necessary when loading a homemade model)}
 }
 \description{
 This function can either access the models saved in
-\code{decryptrModels:::models} or in a local file create by the user with
-\code{\link[=train_model]{train_model()}}.
+a local or remote file create by the user with \code{\link[=train_model]{train_model()}}.
 }
