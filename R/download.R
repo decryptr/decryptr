@@ -32,9 +32,9 @@ download_captcha <- function(url, n = 1, path = ".", secure = FALSE, timeout = 3
 
   # Iterate over downloads
   out <- c()
-  pb <- progress::progress_bar$new(total = n)
+  # pb <- progress::progress_bar$new(total = n)
   for (i in 1:n) {
-    pb$tick()
+    # pb$tick()
     out <- c(out, download_captcha_(url, path, secure, ext, timeout))
   }
 
