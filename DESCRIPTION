@@ -2,11 +2,8 @@ Package: decryptr
 Title: An extensible API for breaking captchas
 Version: 0.2.1.9000
 Authors@R: c(person("Julio", "Trecenti", role = c("aut")),
-  person("Caio", "Lente", email = "caio.lente@usp.br", role = c("aut", "cre")),
-  person("Daniel", "Falbel", role = c("aut")),
-  person("Milene", "Farhat", role = c("aut")),
-  person("Beatriz", "Vianna", role = c("aut")),
-  person("Evelin", "Angelica", role = c("aut")))
+  person("Caio", "Lente", email = "c@lente.dev", role = c("aut", "cre")),
+  person("Daniel", "Falbel", role = c("aut")))
 Description: This tool helps you download, visualize and break captchas.
   It is built as an extensible API so anyone can contribute with their
   own captcha-breaking code.
@@ -15,24 +12,19 @@ License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-  abind,
-  magrittr,
-  stringr,
-  httr,
-  grDevices,
-  purrr,
-  keras,
-  progress,
-  decryptrModels,
-  tfdatasets,
-  magick
-Remotes:
-  decryptr/decryptrModels
+    abind,
+    magrittr,
+    stringr,
+    httr,
+    grDevices,
+    purrr,
+    keras,
+    magick,
+    pins
 Suggests:
   knitr,
   rmarkdown,
   testthat,
-  covr,
   readr
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0

@@ -2,6 +2,10 @@
 output: github_document
 ---
 
+<!-- badges: start -->
+  [![R build status](https://github.com/decryptr/decryptr/workflows/R-CMD-check/badge.svg)](https://github.com/decryptr/decryptr/actions)
+  <!-- badges: end -->
+
 # decryptr
 
 [![Travis-CI Build Status](https://travis-ci.org/decryptr/decryptr.svg?branch=master)](https://travis-ci.org/decryptr/decryptr)
@@ -137,3 +141,55 @@ pre-processing on the image, so decryption is blazing fast.
 ```{r benchmark}
 microbenchmark::microbenchmark(decrypt = decrypt(captcha, model))
 ```
+
+## Todo list
+
+- [ ] GitHub Actions
+    - pkgdown
+    - check
+    - ajustar modelos (?)
+- [ ] yaml das labels dos modelos
+- [x] load models using `{pins}`
+    - treinar tudo denovo
+    - save all models without hdf5
+        - zipar
+- [ ] Use tensorflow preprocessing tools
+- [ ] usethis-like interface
+    - `create_decryptr_project()` function
+- [ ] helper funs to create API
+    - `deploy_decryptr_project()`
+    - `upload_decryptr_model()`
+- [ ] better file structure (labels in file name are bad) (?)
+- [ ] automated responses to API requests
+- [ ] add more captchas
+    - TRT (varios)
+    - Jucesp
+    - ...
+    - general purpose model
+- [ ] tutorial
+- [ ] shiny app (classifier)
+    - `classify_captcha_shiny(dir_input, dir_output, dbc_key)`
+- [ ] video
+- [ ] blog
+    - Lime
+    - fazendo um scraping usando decryptr
+    - criando uma API com decryptr (plumber + Docker + tf)
+    - benchmark da API decryptr (quantas requests por segundo, `{loadtest}`)
+- [ ] implement models
+    - [ ] variable size image
+        - `layer_lambda(tf$img$resize())`
+    - [ ] variable size text
+    - [ ] transfer learning
+    - [ ] acgan-captcha
+    - [ ] oracle-captcha
+    - [ ] prior-based captcha
+
+
+
+
+
+
+
+
+
+
