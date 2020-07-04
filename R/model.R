@@ -2,31 +2,38 @@
 #' @title Load a captcha-breaking model
 #'
 #' @description This function can either access the models saved in
-#' `decryptrModels:::models` or in a local file create by the user with
+#' [decryptrModels::models] or in a local file create by the user with
 #' [train_model()].
 #'
-#' @param model Either the path to a ".hdf5" file or the name of a known model
-#' (`"rfb"`, `"trt"`, `"tjmg"`, `"esaj"`, `"rsc"`, `"cadesp"`, `"nfesp"`, `"tjes"`, `"tjrs"`, `"jucesp"`)
+#' @param model Either the path to a serialized file or the name of a known model
 #' @param labs A character vector with all the labels the model could possibly
 #' output (necessary when loading a homemade model)
+#'
+#' @seealso [decryptrModels::models]
 #'
 #' @export
 load_model <- function(model, labs = c(0:9, base::letters)) {
 
+  # Available models
+  models <- decryptrModels::models$name
+
   # Load model either from a path or from decryptrModels
-  if (!(model %in% c("rfb", "trt", "tjmg", "esaj", "rsc", "cadesp", "nfesp", "tjes", "tjrs", "jucesp"))) {
-    model <- keras::load_model_hdf5(model, compile = FALSE)
+  if (!(model %in% models)) {
+
+    # Check file extension
+    if (grepl("\\.(h5|hdf5)$", model)) {
+      model <- keras::load_model_hdf5(model, compile = FALSE)
+    } else {
+      model <- keras::load_model_tf(model, compile = FALSE)
+    }
+    m <- list(labs = labs, model = model)
   } else {
-    models <- decryptrModels::models
-    path <- system.file("keras", package = "decryptrModels")
-    files <- dir(path, full.names = TRUE)
-    file_path <- normalizePath(files[grepl(model, files)])
-    labs <- models[grepl(model, models[["name"]]), ][["labs"]][[1]]
-    model <- keras::load_model_hdf5(file_path, compile = FALSE)
+
+    # Handle with decryptrModels
+    m <- decryptrModels::read_model(model)
   }
 
   # Create model object
-  m <- list(labs = labs, model = model)
   class(m) <- "model"
 
   return(m)

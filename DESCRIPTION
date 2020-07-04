@@ -23,7 +23,7 @@ Imports:
   purrr,
   keras,
   progress,
-  decryptrModels,
+  decryptrModels (>= 0.0.1),
   tfdatasets,
   magick
 Remotes:

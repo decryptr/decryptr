@@ -13,7 +13,7 @@
 \item 
 }}
 
-\item{...}{Other arguments passed on to \code{\link[graphics:plot]{graphics::plot()}}}
+\item{...}{Other arguments passed on to \code{\link[graphics:plot.default]{graphics::plot()}}}
 }
 \description{
 Plot a captcha
