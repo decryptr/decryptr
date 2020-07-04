@@ -19,7 +19,7 @@ NULL
 .onLoad <- function(libname, pkgname) {
   if (!requireNamespace("reticulate", quietly = TRUE)) {
     warning("Initialize TF with 'reticulate::py_available(TRUE)'", call. = FALSE)
-    invisible(FALSE)
+    return(FALSE)
   }
 
   invisible(reticulate::py_available(TRUE))
