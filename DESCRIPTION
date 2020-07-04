@@ -33,7 +33,8 @@ Suggests:
   rmarkdown,
   testthat,
   covr,
-  readr
+  readr,
+  reticulate
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace", "collate"))
