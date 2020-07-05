@@ -1,6 +1,6 @@
 Package: decryptr
 Title: An extensible API for breaking captchas
-Version: 0.2.1.9000
+Version: 0.2.2
 Authors@R: c(person("Julio", "Trecenti", role = c("aut")),
   person("Caio", "Lente", email = "caio.lente@usp.br", role = c("aut", "cre")),
   person("Daniel", "Falbel", role = c("aut")),
@@ -23,7 +23,7 @@ Imports:
   purrr,
   keras,
   progress,
-  decryptrModels,
+  decryptrModels (>= 0.0.1),
   tfdatasets,
   magick
 Remotes:
@@ -33,7 +33,8 @@ Suggests:
   rmarkdown,
   testthat,
   covr,
-  readr
+  readr,
+  reticulate
 VignetteBuilder: knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace", "collate"))

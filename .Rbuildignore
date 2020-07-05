@@ -8,3 +8,4 @@
 ^appveyor\.yml$
 ^codecov\.yml$
 ^data-raw$
+^\.github$

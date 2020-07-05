@@ -1,7 +1,7 @@
 globalVariables(c(
   "arq", "n", ".", "g", "r", "b", "y", "x", "group", "letras",
   "letras", "rowname", "v", "letra", "xy", "cor", "key", "value",
-  "model.matrix", "predict", "y_train", "model"
+  "model.matrix", "predict", "y_train", "model", "id_train"
 ))
 
 #' Pipe operator
@@ -15,3 +15,12 @@ globalVariables(c(
 #' @importFrom magrittr %>%
 #' @usage lhs \%>\% rhs
 NULL
+
+.onLoad <- function(libname, pkgname) {
+  if (!requireNamespace("reticulate", quietly = TRUE)) {
+    warning("Initialize TF with 'reticulate::py_available(TRUE)'", call. = FALSE)
+    return(FALSE)
+  }
+
+  invisible(reticulate::py_available(TRUE))
+}

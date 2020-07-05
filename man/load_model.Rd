@@ -7,14 +7,16 @@
 load_model(model, labs = c(0:9, base::letters))
 }
 \arguments{
-\item{model}{Either the path to a ".hdf5" file or the name of a known model
-(\code{"rfb"}, \code{"trt"}, \code{"tjmg"}, \code{"esaj"}, \code{"rsc"}, \code{"cadesp"}, \code{"nfesp"}, \code{"tjes"}, \code{"tjrs"}, \code{"jucesp"})}
+\item{model}{Either the path to a serialized file or the name of a known model}
 
 \item{labs}{A character vector with all the labels the model could possibly
 output (necessary when loading a homemade model)}
 }
 \description{
 This function can either access the models saved in
-\code{decryptrModels:::models} or in a local file create by the user with
+\link[decryptrModels:models]{decryptrModels::models} or in a local file create by the user with
 \code{\link[=train_model]{train_model()}}.
+}
+\seealso{
+\link[decryptrModels:models]{decryptrModels::models}
 }
