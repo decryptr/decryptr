@@ -17,13 +17,13 @@ test_that("reading works", {
 
   # Expectations
   expect_named(one_cap, c("y", "x"))
-  expect_match(attr(one_cap, "file"), "\\.jpeg")
+  expect_match(attr(one_cap, "file"), "\\.png")
   expect_null(one_cap$y)
-  expect_equal(dim(one_cap$x), c(35, 120, 1))
+  expect_equal(dim(one_cap$x), c(50, 180, 1))
   expect_named(one_cap_ans, c("y", "x"))
-  expect_match(attr(one_cap_ans, "file"), "\\.jpeg")
+  expect_match(attr(one_cap_ans, "file"), "\\.png")
   expect_equal(length(one_cap_ans$y), 6)
-  expect_equal(dim(one_cap_ans$x), c(35, 120, 1))
+  expect_equal(dim(one_cap_ans$x), c(50, 180, 1))
 })
 
 test_that("reading works with vocabualry", {
@@ -42,9 +42,9 @@ test_that("reading works with vocabualry", {
 
   # Expectations
   expect_named(one_cap_ans, c("y", "x"))
-  expect_match(attr(one_cap_ans, "file"), "\\.jpeg")
+  expect_match(attr(one_cap_ans, "file"), "\\.png")
   expect_equal(dim(one_cap_ans$y), c(6, length(vocab)))
-  expect_equal(dim(one_cap_ans$x), c(35, 120, 1))
+  expect_equal(dim(one_cap_ans$x), c(50, 180, 1))
   expect_equal(colnames(one_cap_ans$y), vocab)
 
 })

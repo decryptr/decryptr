@@ -9,3 +9,4 @@
 ^codecov\.yml$
 ^data-raw$
 ^\.github$
+^tests/testthat/sample-model\.tf$

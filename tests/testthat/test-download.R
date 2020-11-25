@@ -6,7 +6,7 @@ test_that("downloading works", {
   path <- stringr::str_c(tempdir(), "/NewDir")
 
   # Download captchas from source
-  files <- download_captcha("trt", n = 6, path = path)
+  files <- download_captcha("rfb", n = 6, path = path)
 
   # Expectations
   expect_true(dir.exists(path))

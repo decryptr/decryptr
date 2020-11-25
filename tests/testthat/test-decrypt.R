@@ -5,12 +5,11 @@ test_that("decryption works", {
   # Choose directory
   path <- ifelse(dir.exists("sample-captchas/"), "sample-captchas/",
                  "./tests/testthat/sample-captchas/")
-  path2 <- ifelse(dir.exists("sample-captchas/"), "./sample-model.tf",
-                  "./tests/testthat/sample-model.tf")
+  path2 <- ifelse(dir.exists("sample-captchas/"), "./sample-model.hdf5",
+                  "./tests/testthat/sample-model.hdf5")
 
   # Setup
   files <- list.files(path, pattern = "_", full.names = TRUE)
-  files <- files[stringr::str_length(files) > min(stringr::str_length(files))]
 
   # Load model
   model <- load_model(path2)
@@ -21,10 +20,10 @@ test_that("decryption works", {
   # Expectations
   expect_equal(class(decrypt(files, model)), "character")
   expect_equal(class(decrypt(files, path2)), "character")
-  expect_equal(class(decrypt(files, "trt")), "character")
+  expect_equal(class(decrypt(files, "rfb")), "character")
   expect_equal(class(decrypt(cap, model)), "character")
   expect_equal(class(decrypt(cap, path2)), "character")
-  expect_equal(class(decrypt(cap, "trt")), "character")
+  expect_equal(class(decrypt(cap, "rfb")), "character")
 })
 
 test_that("decrypt works with raw vector", {
@@ -32,7 +31,7 @@ test_that("decrypt works with raw vector", {
   path <- ifelse(dir.exists("sample-captchas/"), "sample-captchas/",
                  "./tests/testthat/sample-captchas/")
 
-  captcha_raw <- readr::read_file_raw(paste0(path, "captcha2bce28f1401c_da3vh3.jpeg"))
+  captcha_raw <- readr::read_file_raw(paste0(path, "captcha372a5114848de_f9ccnk.png"))
 
-  expect_equal(class(decrypt(captcha_raw, "trt")), "character")
+  expect_equal(class(decrypt(captcha_raw, "rfb")), "character")
 })
