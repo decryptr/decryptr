@@ -1,54 +1,94 @@
-on: [push, pull_request]
+# For help debugging build failures open an issue on the RStudio community with the 'github-actions' tag.
+# https://community.rstudio.com/new-topic?category=Package%20development&tags=github-actions
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
 
 name: R-CMD-check
 
 jobs:
   R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-16.04']
-        tf: ['2.3.0']
-        include:
-          - os: ubuntu-16.04
-            cran: https://demo.rstudiopm.com/all/__linux__/xenial/latest
-          - tf: nightly
-            allow_failure: true
-    runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }} (TF ${{ matrix.tf }})
+        config:
+          - {os: ubuntu-16.04,   r: 'devel',   rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", http-user-agent: "R/4.0.0 (ubuntu-16.04) R (4.0.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
+          - {os: ubuntu-16.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
+
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      TF_VERSION: ${{ matrix.tf }}
-      PIP_NO_WARN_SCRIPT_LOCATION: false
-      RETICULATE_AUTOCONFIGURE: 'FALSE'
-      CRAN: ${{ matrix.cran }}
+      RSPM: ${{ matrix.config.rspm }}
 
     steps:
-      - uses: actions/checkout@v1
-      - uses: r-lib/actions/setup-r@master
-      - uses: r-lib/actions/setup-pandoc@master
+      - uses: actions/checkout@v2
+
+      - uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: ${{ matrix.config.r }}
+
+      - uses: r-lib/actions/setup-pandoc@v1
+
+      - name: Query dependencies
+        run: |
+          install.packages('remotes')
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        if: runner.os != 'Windows'
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ matrix.config.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ matrix.config.os }}-${{ hashFiles('.github/R-version') }}-1-
+
       - name: Install system dependencies
         if: runner.os == 'Linux'
-        env:
-          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
-          Rscript -e "install.packages('remotes')" -e "remotes::install_github('r-hub/sysreqs')"
-          sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
-          sudo -s eval "$sysreqs"
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "16.04"))')
+
       - name: Install dependencies
-        run: Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)" -e "remotes::install_cran('rcmdcheck')"
+        run: |
+          remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran("rcmdcheck")
+        shell: Rscript {0}
+
       - name: Install Miniconda
         run: |
           Rscript -e "remotes::install_github('rstudio/reticulate')"
           Rscript -e "reticulate::install_miniconda()"
       - if: runner.os == 'macOS'
         run: echo "options(reticulate.conda_binary = reticulate:::miniconda_conda())" >> .Rprofile
-      - name: Install TensorFlow
+      - name: Install python-chess
         run: |
           Rscript -e "reticulate::conda_create('r-reticulate', packages = c('python==3.6.9'))"
           Rscript -e "remotes::install_local()"
-          Rscript -e "tensorflow::install_tensorflow(version = Sys.getenv('TF_VERSION'))"
-          Rscript -e "reticulate::py_install('IPython', pip = TRUE)"
+          Rscript -e "tensorflow::install_tensorflow()"
+
       - name: Check
-        continue-on-error: ${{ matrix.allow_failure == 'true'}}
-        run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning', check_dir = 'check')"
+        env:
+          _R_CHECK_CRAN_INCOMING_REMOTE_: false
+          CHESS_TEST: 1
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
+        shell: Rscript {0}
+
+      - name: Upload check results
+        if: failure()
+        uses: actions/upload-artifact@main
+        with:
+          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
+          path: check
