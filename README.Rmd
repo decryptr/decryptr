@@ -4,14 +4,11 @@ output: github_document
 
 # decryptr
 
-[![Travis-CI Build Status](https://travis-ci.org/decryptr/decryptr.svg?branch=master)](https://travis-ci.org/decryptr/decryptr)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/decryptr/decryptr?branch=master&svg=true)](https://ci.appveyor.com/project/decryptr/decryptr)
+[![R build status](https://github.com/decryptr/decryptr/workflows/R-CMD-check/badge.svg)](https://github.com/decryptr/decryptr/actions)
 [![Coverage Status](https://img.shields.io/codecov/c/github/decryptr/decryptr/master.svg)](https://codecov.io/github/decryptr/decryptr?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/decryptr)](http://cran.r-project.org/package=decryptr)
 
 ## Overview
-
-**FOR MORE INFO ABOUT THE OLD API (DECRYPTR LEGACY), SEE [V0.1](https://github.com/decryptr/decryptr/releases/tag/v0.1)**
 
 `decryptr` is an R package to break captchas. It is also an extensible tool
 built in a way that enables anyone to contribute with their own captcha-breaking
@@ -27,8 +24,8 @@ devtools::install_github("decryptr/decryptr")
 ## Basic usage
 
 `decryptr` has functions for downloading and breaking captchas from multiple
-known sources. If you wanted to use this package with, let's say, a TRT (Regional
-Worker's Court), you could go by the following steps:
+known sources. If you wanted to use this package with, let's say, RFB (Receita
+Federal), you could go by the following steps:
 
 ```{r lib, include = FALSE}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE)
@@ -38,11 +35,11 @@ devtools::load_all(); library(magrittr)
 
 
 ```{r basic}
-# Download captcha from TRT
-file <- download_captcha("trt", path = "./img")
+# Download captcha from RFB
+file <- download_captcha("rfb", path = "./img")
 
 # Break captcha
-decrypt(file, model = "trt")
+decrypt(file, model = "rfb")
 ```
 
 Simple, right? The `decrypt()` funcion is this package's workhorse: it is able to
@@ -58,7 +55,7 @@ can use the `plot()` funcion to draw out the captcha image:
 captcha <- read_captcha(file)
 
 # Plot captcha
-plot(captcha)
+plot(captcha[[1]])
 ```
 
 If you want to learn more about the models that already come packaged with `decryptr`,
@@ -80,16 +77,18 @@ I use static classification to label a set of 10 captchas:
 
 ```{r classification, eval = FALSE}
 # URL of a captcha (for illustrative purposes I'll be using
-# TRT's URL, but you can use whichever URL you want)
-url <- "https://pje.trt4.jus.br/consultaprocessual/seam/resource/captcha"
+# RFB's URL, but you can use whichever URL you want)
+url <- paste0(
+  "http://www.receita.fazenda.gov.br/pessoajuridica/",
+  "cnpj/cnpjreva/captcha/gerarCaptcha.asp")
 
 # Download captcha from URL
 files <- download_captcha(url, n = 10, path = "./img")
 
 # Answers to downloaded captchas
 answers <- c(
-  "ew3h3n", "ew3h3n", "da7522", "da7522", "w8kerh",
-  "mh52v3", "ny248u", "56nwr5", "7tx6dy", "n3fue6")
+  "fvhca9", "cyz4vl", "luzdve", "lb9mnq", "9bquah",
+  "d1zwau", "mlvk1t", "g6zbyf", "17xauo", "bo6cdg")
 
 # Classify captchas (if answers weren't supplied,
 # I'd be promped for interactive classification)
@@ -97,8 +96,8 @@ new_files <- classify(files, answers, path = "./img")
 ```
 
 ```{r classification_, include = FALSE}
-files <- download_captcha("trt", n = 10, path = "./img")
-new_files <- classify(files, path = "./img", model = load_model("trt"))
+files <- download_captcha("rfb", n = 10, path = "./img")
+new_files <- classify(files, path = "./img", model = load_model("rfb"))
 ```
 
 Now that we have a set of classified captchas, we can use them to train a

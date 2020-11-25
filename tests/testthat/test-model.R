@@ -8,7 +8,7 @@ test_that("reading models works", {
   # Setup
   models <- list(
     load_model("rfb"),
-    load_model("trt"),
+    # load_model("trt"),
     load_model("tjmg"),
     load_model("esaj"))
 
@@ -18,12 +18,12 @@ test_that("reading models works", {
   # Expectations
   expect_equal(class(models[[1]]), "model")
   expect_gt(objsz(models[[1]]), 2000)
+  # expect_equal(class(models[[2]]), "model")
+  # expect_gt(objsz(models[[2]]), 2000)
   expect_equal(class(models[[2]]), "model")
   expect_gt(objsz(models[[2]]), 2000)
   expect_equal(class(models[[3]]), "model")
   expect_gt(objsz(models[[3]]), 2000)
-  expect_equal(class(models[[4]]), "model")
-  expect_gt(objsz(models[[4]]), 2000)
 })
 
 test_that("training models works", {
@@ -39,7 +39,6 @@ test_that("training models works", {
 
   # Setup
   files <- list.files(path, pattern = "_", full.names = TRUE)
-  files <- files[stringr::str_length(files) > min(stringr::str_length(files))]
 
   # Read captcha
   cap_ans <- read_captcha(files, ans_in_path = TRUE)
@@ -70,12 +69,12 @@ test_that("join_captchas works", {
   cap_j2 <- join_captchas(cap2)
 
   # Expectations
-  expect_equal(dim(cap_j$x), c(10, 35, 120, 1))
+  expect_equal(dim(cap_j$x), c(10, 50, 180, 1))
   expect_equal(dim(cap_j$y), c(10, 6, 36))
   expect_equal(cap_j$n, 10)
 
-  expect_equal(dim(cap_j2$x), c(10, 35, 120, 1))
-  expect_equal(dim(cap_j2$y), c(10, 6, 24))
+  expect_equal(dim(cap_j2$x), c(10, 50, 180, 1))
+  expect_equal(dim(cap_j2$y), c(10, 6, 29))
   expect_equal(cap_j2$n, 10)
 
 
